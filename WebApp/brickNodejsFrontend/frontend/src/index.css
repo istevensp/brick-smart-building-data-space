@@ -1,0 +1,49 @@
+@import '@xyflow/react/dist/base.css';
+@import url('https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap');
+
+/* Canvas general */
+:root {
+  --bg-color: rgb(17,17,17);
+  --text-color: rgb(243,244,246);
+  --node-border-radius: 10px;
+  --node-box-shadow:
+    10px 0 15px rgba(42,138,246,0.3),
+   -10px 0 15px rgba(233,42,103,0.3);
+}
+
+.react-flow {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Fira Mono', monospace;
+}
+
+/* keyframes para spinner (si lo usas) */
+@keyframes spinner {
+  100% { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+/* Pie de nodo: valor + unidad */
+.react-flow__node-turbo .footer {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text-color);
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+/* Ajustes para que título pueda romper líneas largas */
+.react-flow__node-turbo .inner {
+  white-space: normal;
+}
+.react-flow__node-turbo .title {
+  max-width: 240px;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+
+
+
+
+
+

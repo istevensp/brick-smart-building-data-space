@@ -1,0 +1,50 @@
+Zonas del Laboratorio de Redes de Datos
+----------------------------------------------------
+Zona Grupo_1
+
+Nombre_Sensor: ESPOL:S1 a brick:Sensor
+    brick:haspoint ESPOL:S1_Temperatura, ESPOL:S1_Humedad
+    ESPOL:db_id Literal("airClimate1")
+
+Espol:S1_Temperatura a brick:Temperature_Sensor
+Espol:S1_Humedad a brick:Humidity_Sensor
+
+
+-------------------------------------------------------
+Zona Grupo_3_5 
+
+####################### Si no se los reobaron los pongo ######################## 
+
+Nombre_Sensor: ESPOL:S3 a brick:Sensor
+    brick:haspoint ESPOL:S3_Temperatura, ESPOL:S3_Humedad
+    ESPOL:db_id Literal("airClimate3")
+
+Espol:S3_Temperatura a brick:Temperature_Sensor
+Espol:S3_Humedad a brick:Humidity_Sensor
+
+
+Nombre_Sensor: ESPOL:S5 a brick:Sensor
+    brick:haspoint ESPOL:S5_Temperatura, ESPOL:S5_Humedad
+    ESPOL:db_id Literal("airClimate5")
+
+Espol:S5_Temperatura a brick:Temperature_Sensor
+Espol:S5_Humedad a brick:Humidity_Sensor
+
+
+---------------------------------------------------------
+Zona Grupo_2_4
+
+Nombre_Sensor: ESPOL:S2 a brick:Sensor
+    brick:haspoint ESPOL:S2_Temperatura, ESPOL:S2_Humedad
+    ESPOL:db_id Literal("airClimate2")
+
+Espol:S2_Temperatura a brick:Temperature_Sensor
+Espol:S2_Humedad a brick:Humidity_Sensor
+
+
+Nombre_Sensor: ESPOL:S4 a brick:Sensor
+    brick:haspoint ESPOL:S4_Temperatura, ESPOL:S4_Humedad
+    ESPOL:db_id Literal("airClimate4")
+
+Espol:S4_Temperatura a brick:Temperature_Sensor
+Espol:S4_Humedad a brick:Humidity_Sensor

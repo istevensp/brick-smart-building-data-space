@@ -1,0 +1,106 @@
+Zonas del Laboratorio de Sistemas en la Nube
+-------------------------------------------------
+
+zona_oficinaRacks
+
+Nombre_Sensor: ESPOL:s31_19_Router a brick:Sensor
+	brick:haspoint ESPOL:s31_19_Router_ActivePower, ESPOL:s31_19_Router_ApparentPower, ESPOL:s31_19_Router_ReactivePower, ESPOL:s31_19_Router_Factor, ESPOL:s31_19_Router_Voltage, ESPOL:s31_19_Router_Current
+
+Espol:s31_19_Router_ActivePower a brick:Active_Power_Sensor
+Espol:s31_19_Router_ApparentPower a brick:Power_Sensor 
+Espol:s31_19_Router_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_19_Router_Factor a brick:Power_Factor_Sensor
+Espol:s31_19_Router_Current a brick:Current_Sensor
+Espol:s31_19_Router_Voltage a brick:Voltage_Sensor
+
+Nombre_Sensor: ESPOL:s31_20_Server a brick:Sensor
+	brick:haspoint ESPOL:s31_20_Server_ActivePower, ESPOL:s31_20_Server_ApparentPower, ESPOL:s31_20_Server_ReactivePower, ESPOL:s31_20_Server_Factor, ESPOL:s31_20_Server_Voltage, ESPOL:s31_20_Server_Current
+
+Espol:s31_20_Server_ActivePower a brick:Active_Power_Sensor
+Espol:s31_20_Server_ApparentPower a brick:Power_Sensor 
+Espol:s31_20_Server_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_20_Server_Factor a brick:Power_Factor_Sensor
+Espol:s31_20_Server_Current a brick:Current_Sensor
+Espol:s31_20_Server_Voltage a brick:Voltage_Sensor
+
+---------------------------------------------------
+
+Zona_Ventana1
+
+Nombre_Sensor: ESPOL:s31_13_Profesor a brick:Sensor
+	brick:haspoint ESPOL:s31_13_Profesor_ActivePower, ESPOL:s31_13_Profesor_ApparentPower, ESPOL:s31_13_Profesor_ReactivePower, ESPOL:s31_13_Profesor_Factor, ESPOL:s31_13_Profesor_Voltage, ESPOL:s31_13_Profesor_Current
+
+Espol:s31_13_Profesor_ActivePower a brick:Active_Power_Sensor
+Espol:s31_13_Profesor_ApparentPower a brick:Power_Sensor 
+Espol:s31_13_Profesor_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_13_Profesor_Factor a brick:Power_Factor_Sensor
+Espol:s31_13_Profesor_Current a brick:Current_Sensor
+Espol:s31_13_Profesor_Voltage a brick:Voltage_Sensor
+
+Nombre_Sensor: ESPOL:s31_14 a brick:Sensor
+	brick:haspoint ESPOL:s31_14_ActivePower, ESPOL:s31_14_ApparentPower, ESPOL:s31_14_ReactivePower, ESPOL:s31_14_Factor, ESPOL:s31_14_Voltage, ESPOL:s31_14_Current
+
+Espol:s31_14_ActivePower a brick:Active_Power_Sensor
+Espol:s31_14_ApparentPower a brick:Power_Sensor 
+Espol:s31_14_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_14_Factor a brick:Power_Factor_Sensor
+Espol:s31_14_Current a brick:Current_Sensor
+Espol:s31_14_Voltage a brick:Voltage_Sensor
+-------------------------------------------------
+
+Zona_Ventana2
+
+Nombre_Sensor: ESPOL:s31_16 a brick:Sensor
+	brick:haspoint ESPOL:s31_16_ActivePower, ESPOL:s31_16_ApparentPower, ESPOL:s31_16_ReactivePower, ESPOL:s31_16_Factor, ESPOL:s31_16_Voltage, ESPOL:s31_16_Current
+
+Espol:s31_16_ActivePower a brick:Active_Power_Sensor
+Espol:s31_16_ApparentPower a brick:Power_Sensor 
+Espol:s31_16_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_16_Factor a brick:Power_Factor_Sensor
+Espol:s31_16_Current a brick:Current_Sensor
+Espol:s31_16_Voltage a brick:Voltage_Sensor
+
+-------------------------------------------------
+Zona_Brekers
+
+Nombre_Sensor: ESPOL:s31_12_Proyector a brick:Sensor
+	brick:haspoint ESPOL:s31_12_Proyector_ActivePower, ESPOL:s31_12_Proyector_ApparentPower, ESPOL:s31_12_Proyector_ReactivePower, ESPOL:s31_12_Proyector_Factor, ESPOL:s31_12_Proyector_Voltage, ESPOL:s31_12_Proyector_Current
+
+Espol:s31_12_Proyector_ActivePower a brick:Active_Power_Sensor
+Espol:s31_12_Proyector_ApparentPower a brick:Power_Sensor 
+Espol:s31_12_Proyector_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_12_Proyector_Factor a brick:Power_Factor_Sensor
+Espol:s31_12_Proyector_Current a brick:Current_Sensor
+Espol:s31_12_Proyector_Voltage a brick:Voltage_Sensor
+
+Nombre_Sensor: ESPOL:s31_15 a brick:Sensor
+	brick:haspoint ESPOL:s31_15_ActivePower, ESPOL:s31_15_ApparentPower, ESPOL:s31_15_ReactivePower, ESPOL:s31_15_Factor, ESPOL:s31_15_Voltage, ESPOL:s31_15_Current
+
+Espol:s31_15_ActivePower a brick:Active_Power_Sensor
+Espol:s31_15_ApparentPower a brick:Power_Sensor 
+Espol:s31_15_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_15_Factor a brick:Power_Factor_Sensor
+Espol:s31_15_Current a brick:Current_Sensor
+Espol:s31_15_Voltage a brick:Voltage_Sensor
+-------------------------------------------------
+Zona_Aire
+
+Nombre_Sensor: ESPOL:s31_17 a brick:Sensor
+	brick:haspoint ESPOL:s31_17_ActivePower, ESPOL:s31_17_ApparentPower, ESPOL:s31_17_ReactivePower, ESPOL:s31_17_Factor, ESPOL:s31_17_Voltage, ESPOL:s31_17_Current
+
+Espol:s31_17_ActivePower a brick:Active_Power_Sensor
+Espol:s31_17_ApparentPower a brick:Power_Sensor 
+Espol:s31_17_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_17_Factor a brick:Power_Factor_Sensor
+Espol:s31_17_Current a brick:Current_Sensor
+Espol:s31_17_Voltage a brick:Voltage_Sensor
+
+Nombre_Sensor: ESPOL:s31_18 a brick:Sensor
+	brick:haspoint ESPOL:s31_18_ActivePower, ESPOL:s31_18_ApparentPower, ESPOL:s31_18_ReactivePower, ESPOL:s31_18_Factor, ESPOL:s31_18_Voltage, ESPOL:s31_18_Current
+
+Espol:s31_18_ActivePower a brick:Active_Power_Sensor
+Espol:s31_18_ApparentPower a brick:Power_Sensor 
+Espol:s31_18_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_18_Factor a brick:Power_Factor_Sensor
+Espol:s31_18_Current a brick:Current_Sensor
+Espol:s31_18_Voltage a brick:Voltage_Sensor

@@ -1,0 +1,9 @@
+#venvs
+.brick_env/
+#MacOS_Specific
+.DS_Store
+#Enviroment variables
+.env
+# Django Caches
+__pycache__/
+.py[cod]

@@ -1,0 +1,331 @@
+/* turbo.css - Enhanced Version */
+
+/* Variables dinámicas para temas */
+:root {
+  --bg-color: rgb(17,17,17);
+  --text-color: rgb(243,244,246);
+  --node-border-radius: 10px;
+  --node-box-shadow: 10px 0 15px rgba(42,138,246,0.3), -10px 0 15px rgba(233,42,103,0.3);
+  --gradient-start: #e92a67;
+  --gradient-mid: #a853ba;
+  --gradient-end: #2a8af6;
+}
+
+/* Modo claro */
+.light-mode {
+  --bg-color: #f8f9fa;
+  --text-color: #1f2937;
+  --node-box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  --gradient-start: #ff6b9d;
+  --gradient-mid: #c77dff;
+  --gradient-end: #7209b7;
+}
+
+/* 1) Turbo Node básico */
+.react-flow__node-turbo {
+  border-radius: var(--node-border-radius);
+  display: flex;
+  height: 180px;
+  min-width: 320px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  box-shadow: var(--node-box-shadow);
+  transition: all 0.3s ease;
+}
+
+/* 2) Wrapper */
+.react-flow__node-turbo .wrapper {
+  overflow: hidden;
+  display: flex;
+  padding: 5px;
+  position: relative;
+  border-radius: var(--node-border-radius);
+  flex-grow: 1;
+}
+
+/* 3) Anillo conic-gradient para modo oscuro */
+.gradient:before {
+  content: '';
+  position: absolute;
+  padding-bottom: calc(100% * 1.41421356237);
+  width: calc(100% * 1.41421356237);
+  background: conic-gradient(
+    from -160deg at 50% 50%,
+    var(--gradient-start) 0deg,
+    var(--gradient-mid) 120deg,
+    var(--gradient-end) 240deg,
+    var(--gradient-start) 360deg
+  );
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  pointer-events: none;
+}
+
+/* Gradiente para modo claro */
+.light-gradient:before {
+  content: '';
+  position: absolute;
+  padding-bottom: calc(100% * 1.41421356237);
+  width: calc(100% * 1.41421356237);
+  background: linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #f5576c 75%,
+    #667eea 100%
+  );
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* 4) Animación del spinner cuando está seleccionado */
+.react-flow__node-turbo.selected .wrapper.gradient:before,
+.react-flow__node-turbo .wrapper.gradient.selected:before,
+.react-flow__node-turbo.selected .wrapper.light-gradient:before,
+.react-flow__node-turbo .wrapper.light-gradient.selected:before {
+  animation: spinner 4s linear infinite;
+}
+
+/* 5) Inner content & centrado */
+.react-flow__node-turbo .inner {
+  background: var(--inner-bg, var(--bg-color));
+  padding: 16px 20px;
+  border-radius: calc(var(--node-border-radius) - 2px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-grow: 1;
+  position: relative;
+  white-space: normal;
+  transition: background 0.3s ease;
+}
+
+/* 6) Body e icono */
+.react-flow__node-turbo .body { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.react-flow__node-turbo .icon { 
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+/* 7) Título */
+.react-flow__node-turbo .title {
+  font-size: 28px;
+  margin-bottom: 8px;
+  line-height: 1.2;
+  width: 100%;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 280px;
+  color: var(--text-primary, var(--text-color));
+  transition: color 0.3s ease;
+}
+
+/* 8) Subtítulo (timestamp) */
+.react-flow__node-turbo .subtitle {
+  font-size: 19.4px;
+  color: var(--text-secondary, #a1a1a1);
+  margin-bottom: 6px;
+  width: 100%;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 280px;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+/* 9) Pie de nodo: valor + unidad */
+.react-flow__node-turbo .footer {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--footer-color, #4ade80);
+  line-height: 1.2;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+  margin-top: 4px;
+  transition: color 0.3s ease;
+}
+
+/* 10) "Nube" */
+.react-flow__node-turbo .cloud {
+  border-radius: 100%;
+  width: 45px;
+  height: 45px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  box-shadow: var(--node-box-shadow);
+  overflow: hidden;
+  padding: 2px;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.react-flow__node-turbo .cloud div {
+  background: var(--cloud-bg, var(--bg-color));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  flex-grow: 1;
+  height: 100%;
+  width: 100%;
+  transition: background 0.3s ease;
+}
+
+/* 11) Animación de la nube cuando está seleccionado */
+.react-flow__node-turbo.selected .cloud.gradient:before,
+.react-flow__node-turbo .cloud.gradient.selected:before,
+.react-flow__node-turbo.selected .cloud.light-gradient:before,
+.react-flow__node-turbo .cloud.light-gradient.selected:before {
+  animation: spinner 4s linear infinite;
+}
+
+/* 12) Aristas con gradiente */
+.react-flow__edge .react-flow__edge-path {
+  stroke: url(#edge-gradient);
+  stroke-width: 2;
+  stroke-opacity: 0.75;
+}
+
+/* 13) Animación específica para aristas animadas */
+.react-flow__edge.animated .react-flow__edge-path {
+  stroke-dasharray: 5;
+  animation: dashdraw 1s linear infinite;
+}
+
+/* 14) Handles invisibles */
+.react-flow__handle { 
+  opacity: 0;
+  border: none;
+  background: transparent;
+}
+.react-flow__handle.source { right: -10px; }
+.react-flow__handle.target { left: -10px; }
+
+/* 15) Controles y minimapa */
+.react-flow__controls {
+  background: var(--bg-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.react-flow__controls button {
+  background: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid #95679e;
+  transition: all 0.2s ease;
+}
+
+.react-flow__controls button:hover {
+  background: rgba(149, 103, 158, 0.2);
+  transform: scale(1.05);
+}
+
+.react-flow__attribution { 
+  display: none; 
+}
+
+/* 16) Keyframes para las animaciones */
+@keyframes spinner {
+  100% { 
+    transform: translate(-50%, -50%) rotate(-360deg); 
+  }
+}
+
+@keyframes dashdraw {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+/* 17) Efecto de pulso para nodos seleccionados */
+.react-flow__node-turbo.selected {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: var(--node-box-shadow);
+  }
+  50% {
+    box-shadow: 
+      15px 0 25px rgba(42, 138, 246, 0.5),
+      -15px 0 25px rgba(233, 42, 103, 0.5);
+  }
+  100% {
+    box-shadow: var(--node-box-shadow);
+  }
+}
+
+/* 18) Nodos de control */
+.control-node {
+  animation: fadeIn 0.3s ease;
+  transform-origin: center;
+}
+
+.control-node:hover {
+  transform: scale(1.05);
+}
+
+.control-node:active {
+  transform: scale(0.98);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 19) Toast animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 20) Transiciones suaves para cambio de tema */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Fix para ResizeObserver */
+.react-flow__renderer {
+  will-change: transform;
+}
+
+.react-flow__node {
+  pointer-events: all;
+}
+
+

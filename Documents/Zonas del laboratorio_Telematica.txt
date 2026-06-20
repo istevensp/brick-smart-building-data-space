@@ -1,0 +1,317 @@
+Zonas del laboratorio de Telematica
+-------------------------------------
+
+zona_oficina
+
+Nombre_Sensor: ESPOL:s31_01 a brick:Sensor
+	brick:haspoint ESPOL:s31_01_ActivePower, ESPOL:s31_01_ApparentPower, ESPOL:s31_01_ReactivePower, ESPOL:s31_01_Factor, ESPOL:s31_01_Voltage, ESPOL:s31_01_Current
+	ESPOL:db_id Literal("s31_01")
+
+Espol:s31_01_ActivePower a brick:Active_Power_Sensor
+Espol:s31_01_ApparentPower a brick:Power_Sensor 
+Espol:s31_01_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_01_Factor a brick:Power_Factor_Sensor
+Espol:s31_01_Current a brick:Current_Sensor
+Espol:s31_01_Voltage a brick:Voltage_Sensor
+
+
+Nombre_Sensor: ESPOL:s31_02 a brick:Sensor
+	brick:haspoint ESPOL:s31_02_ActivePower, ESPOL:s31_02_ApparentPower, ESPOL:s31_02_ReactivePower, ESPOL:s31_02_Factor, ESPOL:s31_02_Voltage, ESPOL:s31_02_Current
+	ESPOL:db_id Literal("s31_02")
+
+Espol:s31_02_ActivePower a brick:Active_Power_Sensor
+Espol:s31_02_ApparentPower a brick:Power_Sensor 
+Espol:s31_02_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_02_Factor a brick:Power_Factor_Sensor
+Espol:s31_02_Current a brick:Current_Sensor
+Espol:s31_02_Voltage a brick:Voltage_Sensor
+
+
+Nombre_Sensor: ESPOL:s31_05 a brick:Sensor
+	brick:haspoint ESPOL:s31_05_ActivePower, ESPOL:s31_05_ApparentPower, ESPOL:s31_05_ReactivePower, ESPOL:s31_05_Factor, ESPOL:s31_05_Voltage, ESPOL:s31_05_Current
+	ESPOL:db_id Literal("s31_05")
+
+Espol:s31_05_ActivePower a brick:Active_Power_Sensor
+Espol:s31_05_ApparentPower a brick:Power_Sensor 
+Espol:s31_05_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_05_Factor a brick:Power_Factor_Sensor
+Espol:s31_05_Current a brick:Current_Sensor
+Espol:s31_05_Voltage a brick:Voltage_Sensor
+
+---------------------------------------------------------------------------
+
+zona_Bano
+
+---------#se borro AMBILEARN por muchas fallas q tiene, en fin uhhhhhhhhhhh----------------------------------------------------------------------------------- 
+Nombre_Sensor: ESPOL:AMBILEARN a brick:Sensor
+	brick:haspoint ESPOL:AMBILEARN_nivelDeLluvia, ESPOL:AMBILEARN_Temperatura, ESPOL:AMBILEARN_Humedad, ESPOL:AMBILEARN_Presion, ESPOL:AMBILEARN_CalidadAire
+
+ESPOL:AMBILEARN_nivelDeLluvia a brick:Rain_Level_Sensor
+ESPOL:AMBILEARN_Temperatura a brick:Temperature_Sensor
+ESPOL:AMBILEARN_Humedad a brick:Humidity_Sensor
+ESPOL:AMBILEARN_Presion a brick:Pressure_Sensor
+ESPOL:AMBILEARN_CalidadAire a brick:Air_Quality_Sensor
+---------------------------------uuaahhhhhhhhhhhhhhhhhhhhhh---------------------------------------------------------------------------------------------------
+
+Nombre_Sensor: ESPOL:S3 a brick:Sensor
+	brick:haspoint ESPOL:S3_Temperatura, ESpol:S3_Humedad
+	ESPOL:db_id Literal("airClimate3")
+
+Espol:S3_Temperatura a brick:Temperature_Sensor
+Espol:S3_Humedad a brick:Humidity_Sensor
+
+Nombre_Sensor: ESPOL:s31_06 a brick:Sensor
+	brick:haspoint ESPOL:s31_06_ActivePower, ESPOL:s31_06_ApparentPower, ESPOL:s31_06_ReactivePower, ESPOL:s31_06_Factor, ESPOL:s31_06_Voltage, ESPOL:s31_06_Current
+	ESPOL:db_id Literal("s31_06")
+
+Espol:s31_06_ActivePower a brick:Active_Power_Sensor
+Espol:s31_06_ApparentPower a brick:Power_Sensor 
+Espol:s31_06_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_06_Factor a brick:Power_Factor_Sensor
+Espol:s31_06_Current a brick:Current_Sensor
+Espol:s31_06_Voltage a brick:Voltage_Sensor
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+zona_entrada
+
+Nombre_Sensor: ESPOL:airQuality1 a brick:Sensor
+	brick:haspoint ESPOL:airQuality1_co2-concentration, airQuality1_humidity, airQuality1_temp
+	ESPOL:db_id Literal("airQ1")
+
+ESPOL:airQuality1_co2-concentration a brick:CO2_Sensor
+ESPOL:airQuality1_humidity a brick:Humidity_Sensor
+ESPOL:airQuality1_temp a brick:Temperature_Sensor
+
+Nombre_Sensor: ESPOL:airQuality2 a brick:Sensor
+	brick:haspoint ESPOL:airQuality2_co2-concentration, airQuality2_humidity, airQuality2_temp
+	ESPOL:db_id Literal("airQ2")
+
+ESPOL:airQuality2_co2-concentration a brick:CO2_Sensor
+ESPOL:airQuality2_humidity a brick:Humidity_Sensor
+ESPOL:airQuality2_temp a brick:Temperature_Sensor
+
+----------------------------------------------------------------
+zona_lavadero
+
+Nombre_Sensor: ESPOL:S2 a brick:Sensor
+	brick:haspoint ESPOL:S2_Temperatura, ESpol:S2_Humedad
+	ESPOL:db_id Literal("airClimate2")
+
+Espol:S2_Temperatura a brick:Temperature_Sensor
+Espol:S2_Humedad a brick:Humidity_Sensor
+
+
+Nombre_Sensor: ESPOL:S4 a brick:Sensor
+	brick:haspoint ESPOL:S4_Temperatura, ESpol:S4_Humedad
+	ESPOL:db_id Literal("airClimate4")
+
+Espol:S4_Temperatura a brick:Temperature_Sensor
+Espol:S4_Humedad a brick:Humidity_Sensor
+
+
+Nombre_Sensor: ESPOL:s31_10 a brick:Sensor
+	brick:haspoint ESPOL:s31_10_ActivePower, ESPOL:s31_10_ApparentPower, ESPOL:s31_10_ReactivePower, ESPOL:s31_10_Factor, ESPOL:s31_10_Voltage, ESPOL:s31_10_Current
+	ESPOL:db_id Literal("s31_10")
+
+Espol:s31_10_ActivePower a brick:Active_Power_Sensor
+Espol:s31_10_ApparentPower a brick:Power_Sensor 
+Espol:s31_10_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_10_Factor a brick:Power_Factor_Sensor
+Espol:s31_10_Current a brick:Current_Sensor
+Espol:s31_10_Voltage a brick:Voltage_Sensor
+
+
+Nombre_Sensor: ESPOL:s31_11 a brick:Sensor
+	brick:haspoint ESPOL:s31_11_ActivePower, ESPOL:s31_11_ApparentPower, ESPOL:s31_11_ReactivePower, ESPOL:s31_11_Factor, ESPOL:s31_11_Voltage, ESPOL:s31_11_Current
+	ESPOL:db_id Literal("s31_10")
+
+Espol:s31_11_ActivePower a brick:Active_Power_Sensor
+Espol:s31_11_ApparentPower a brick:Power_Sensor 
+Espol:s31_11_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_11_Factor a brick:Power_Factor_Sensor
+Espol:s31_11_Current a brick:Current_Sensor
+Espol:s31_11_Voltage a brick:Voltage_Sensor
+------------------------------------------------------------------
+
+zona_paneles_electricos
+
+Nombre_Sensor: ESPOL:S5 a brick:Sensor
+	brick:haspoint ESPOL:S5_Temperatura, ESpol:S5_Humedad
+	ESPOL:db_id Literal("airClimate5")
+
+Espol:S5_Temperatura a brick:Temperature_Sensor
+Espol:S5_Humedad a brick:Humidity_Sensor
+
+Nombre_Sensor: ESPOL:airQuality5 a brick:Sensor
+	brick:haspoint ESPOL:airQuality5_co2-concentration, airQuality5_humidity, airQuality5_temp
+	ESPOL:db_id Literal("airQ5")
+
+ESPOL:airQuality5_co2-concentration a brick:CO2_Sensor
+ESPOL:airQuality5_humidity a brick:Humidity_Sensor
+ESPOL:airQuality5_temp a brick:Temperature_Sensor
+
+Nombre_Sensor: ESPOL:Shelly a brick:Sensor
+	brick:haspoint ESPOL:Shelly_voltaje_A, Shelly_voltaje_B, Shelly_voltaje_C, Shelly_energia_A, Shelly_energia_B, Shelly_energia_C, Shelly_factor_potencia_A, Shelly_factor_potencia_B, Shelly_factor_potencia_C, Shelly_potencia_A, Shelly_potencia_B, Shelly_potencia_C, Shelly_corriente_A, Shelly_corriente_B, Shelly_corriente_C
+	ESPOL:db_id Literal("shellyem3-349454756742")
+
+ESPOL:Shelly_voltaje_A a brick:Voltage_Sensor
+ESPOL:Shelly_voltaje_B a brick:Voltage_Sensor
+ESPOL:Shelly_voltaje_C a brick:Voltage_Sensor
+ESPOL:Shelly_energia_A a brick:Energy_Sensor
+ESPOL:Shelly_energia_B a brick:Energy_Sensor
+ESPOL:Shelly_energia_C a brick:Energy_Sensor
+ESPOL:Shelly_factor_potencia_A a brick:Power_Factor_Sensor
+ESPOL:Shelly_factor_potencia_B a brick:Power_Factor_Sensor
+ESPOL:Shelly_factor_potencia_C a brick:Power_Factor_Sensor
+ESPOL:Shelly_potencia_A a brick:Active_Power_Sensor
+ESPOL:Shelly_potencia_B a brick:Active_Power_Sensor
+ESPOL:Shelly_potencia_C a brick:Active_Power_Sensor
+ESPOL:Shelly_corriente_A a brick:Current_Sensor
+ESPOL:Shelly_corriente_B a brick:Current_Sensor
+ESPOL:Shelly_corriente_C a brick:Current_Sensor
+
+
+Nombre_Sensor: ESPOL:Shelly_Iz a brick:Sensor
+	brick:haspoint ESPOL:Shelly_Iz_voltaje_A, Shelly_Iz_voltaje_B, Shelly_Iz_voltaje_C, Shelly_Iz_energia_A, Shelly_Iz_energia_B, Shelly_Iz_energia_C, Shelly_Iz_factor_potencia_A, Shelly_Iz_factor_potencia_B, Shelly_Iz_factor_potencia_C, Shelly_Iz_potencia_A, Shelly_Iz_potencia_B, Shelly_Iz_potencia_C, Shelly_Iz_corriente_A, Shelly_Iz_corriente_B, Shelly_Iz_corriente_C
+	ESPOL:db_id Literal("shellyem3-485519DC84EC")
+
+ESPOL:Shelly_Iz_voltaje_A a brick:Voltage_Sensor
+ESPOL:Shelly_Iz_voltaje_B a brick:Voltage_Sensor
+ESPOL:Shelly_Iz_voltaje_C a brick:Voltage_Sensor
+ESPOL:Shelly_Iz_energia_A a brick:Energy_Sensor
+ESPOL:Shelly_Iz_energia_B a brick:Energy_Sensor
+ESPOL:Shelly_Iz_energia_C a brick:Energy_Sensor
+ESPOL:Shelly_Iz_factor_potencia_A a brick:Power_Factor_Sensor
+ESPOL:Shelly_Iz_factor_potencia_B a brick:Power_Factor_Sensor
+ESPOL:Shelly_Iz_factor_potencia_C a brick:Power_Factor_Sensor
+ESPOL:Shelly_Iz_potencia_A a brick:Active_Power_Sensor
+ESPOL:Shelly_Iz_potencia_B a brick:Active_Power_Sensor
+ESPOL:Shelly_Iz_potencia_C a brick:Active_Power_Sensor
+ESPOL:Shelly_Iz_corriente_A a brick:Current_Sensor
+ESPOL:Shelly_Iz_corriente_B a brick:Current_Sensor
+ESPOL:Shelly_Iz_corriente_C a brick:Current_Sensor
+
+
+Nombre_Sensor: ESPOL:Shelly_Der a brick:Sensor
+	brick:haspoint ESPOL:Shelly_Der_voltaje_A, Shelly_Der_voltaje_B, Shelly_Der_voltaje_C, Shelly_Der_energia_A, Shelly_Der_energia_B, Shelly_Der_energia_C, Shelly_Der_factor_potencia_A, Shelly_Der_factor_potencia_B, Shelly_Der_factor_potencia_C, Shelly_Der_potencia_A, Shelly_Der_potencia_B, Shelly_Der_potencia_C, Shelly_Der_corriente_A, Shelly_Der_corriente_B, Shelly_Der_corriente_C
+	ESPOL:db_id Literal("shellyem3-C45BBE5FD50D")
+
+ESPOL:Shelly_Der_voltaje_A a brick:Voltage_Sensor
+ESPOL:Shelly_Der_voltaje_B a brick:Voltage_Sensor
+ESPOL:Shelly_Der_voltaje_C a brick:Voltage_Sensor
+ESPOL:Shelly_Der_energia_A a brick:Energy_Sensor
+ESPOL:Shelly_Der_energia_B a brick:Energy_Sensor
+ESPOL:Shelly_Der_energia_C a brick:Energy_Sensor
+ESPOL:Shelly_Der_factor_potencia_A a brick:Power_Factor_Sensor
+ESPOL:Shelly_Der_factor_potencia_B a brick:Power_Factor_Sensor
+ESPOL:Shelly_Der_factor_potencia_C a brick:Power_Factor_Sensor
+ESPOL:Shelly_Der_potencia_A a brick:Active_Power_Sensor
+ESPOL:Shelly_Der_potencia_B a brick:Active_Power_Sensor
+ESPOL:Shelly_Der_potencia_C a brick:Active_Power_Sensor
+ESPOL:Shelly_Der_corriente_A a brick:Current_Sensor
+ESPOL:Shelly_Der_corriente_B a brick:Current_Sensor
+ESPOL:Shelly_Der_corriente_C a brick:Current_Sensor
+
+
+
+Nombre_Sensor: ESPOL:s31_03 a brick:Sensor
+	brick:haspoint ESPOL:s31_03_ActivePower, ESPOL:s31_03_ApparentPower, ESPOL:s31_03_ReactivePower, ESPOL:s31_03_Factor, ESPOL:s31_03_Voltage, ESPOL:s31_03_Current
+	ESPOL:db_id Literal("s31_03")
+
+Espol:s31_03_ActivePower a brick:Active_Power_Sensor
+Espol:s31_03_ApparentPower a brick:Power_Sensor 
+Espol:s31_03_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_03_Factor a brick:Power_Factor_Sensor
+Espol:s31_03_Current a brick:Current_Sensor
+Espol:s31_03_Voltage a brick:Voltage_Sensor
+
+
+Nombre_Sensor: ESPOL:s31_07 a brick:Sensor
+	brick:haspoint ESPOL:s31_07_ActivePower, ESPOL:s31_07_ApparentPower, ESPOL:s31_07_ReactivePower, ESPOL:s31_07_Factor, ESPOL:s31_07_Voltage, ESPOL:s31_07_Current
+	ESPOL:db_id Literal("s31_07")
+
+Espol:s31_07_ActivePower a brick:Active_Power_Sensor
+Espol:s31_07_ApparentPower a brick:Power_Sensor 
+Espol:s31_07_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_07_Factor a brick:Power_Factor_Sensor
+Espol:s31_07_Current a brick:Current_Sensor
+Espol:s31_07_Voltage a brick:Voltage_Sensor
+
+
+Nombre_Sensor: ESPOL:Accuenergy a brick:Sensor
+	brick:haspoint ESPOL:Accuenergy_voltaje_A, Accuenergy_voltaje_B, Accuenergy_voltaje_C, Accuenergy_energia_A,Accuenergy_energia_B, Accuenergy_energia_C, Accuenergy_factor_potencia_A, Accuenergy_factor_potencia_B, Accuenergy_factor_potencia_C, Accuenergy_potencia_A, Accuenergy_potencia_B, Accuenergy_potencia_C, Accuenergy_corriente_A, Accuenergy_corriente_B, Accuenergy_corriente_C
+	ESPOL:db_id Literal("Accuenergy")
+
+Espol:Accuenergy_voltaje_A a brick:Voltage_Sensor
+Espol:Accuenergy_voltaje_B a brick:Voltage_Sensor
+Espol:Accuenergy_voltaje_C a brick:Voltage_Sensor
+Espol:Accuenergy_energia_A a brick:Energy_Sensor
+Espol:Accuenergy_energia_B a brick:Energy_Sensor
+Espol:Accuenergy_energia_C a brick:Energy_Sensor
+Espol:Accuenergy_factor_potencia_A a brick:Power_Factor_Sensor
+Espol:Accuenergy_factor_potencia_B a brick:Power_Factor_Sensor
+Espol:Accuenergy_factor_potencia_C a brick:Power_Factor_Sensor
+Espol:Accuenergy_potencia_A a brick:Active_Power_Sensor
+Espol:Accuenergy_potencia_B a brick:Active_Power_Sensor
+Espol:Accuenergy_potencia_C a brick:Active_Power_Sensor
+Espol:Accuenergy_corriente_A a brick:Current_Sensor
+Espol:Accuenergy_corriente_B a brick:Current_Sensor
+Espol:Accuenergy_corriente_C a brick:Current_Sensor
+
+------------------------------------------------------------------
+
+zona_mesones
+
+Nombre_Sensor: ESPOL:S1 a brick:Sensor
+	brick:haspoint ESPOL:S1_Temperatura, ESpol:S1_Humedad
+	ESPOL:db_id Literal("airClimate1")
+
+Espol:S1_Temperatura a brick:Temperature_Sensor
+Espol:S1_Humedad a brick:Humidity_Sensor
+
+
+Nombre_Sensor: ESPOL:labclimateTres a brick:Sensor
+	brick:haspoint ESPOL:labclimateTres_co2-concentration, labclimateTres_humidity, labclimateTres_temp
+	ESPOL:db_id Literal("airQ3")
+
+ESPOL:labclimateTres_co2-concentration a brick:CO2_Sensor
+ESPOL:labclimateTres_humidity a brick:Humidity_Sensor
+ESPOL:labclimateTres_temp a brick:Temperature_Sensor
+
+
+Nombre_Sensor: ESPOL:labclimateCuatro a brick:Sensor
+	brick:haspoint ESPOL:labclimateCuatro_co2-concentration, labclimateCuatro_humidity, labclimateCuatro_temp
+	ESPOL:db_id Literal("airQ4")
+
+ESPOL:labclimateCuatro_co2-concentration a brick:CO2_Sensor
+ESPOL:labclimateCuatro_humidity a brick:Humidity_Sensor
+ESPOL:labclimateCuatro_temp a brick:Temperature_Sensor
+
+
+Nombre_Sensor: ESPOL:s31_08 a brick:Sensor
+	brick:haspoint ESPOL:s31_08_ActivePower, ESPOL:s31_08_ApparentPower, ESPOL:s31_08_ReactivePower, ESPOL:s31_08_Factor, ESPOL:s31_08_Voltage, ESPOL:s31_08_Current
+	ESPOL:db_id Literal("s31_08")
+
+Espol:s31_08_ActivePower a brick:Active_Power_Sensor
+Espol:s31_08_ApparentPower a brick:Power_Sensor 
+Espol:s31_08_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_08_Factor a brick:Power_Factor_Sensor
+Espol:s31_08_Current a brick:Current_Sensor
+Espol:s31_08_Voltage a brick:Voltage_Sensor
+
+
+Nombre_Sensor: ESPOL:s31_09 a brick:Sensor
+	brick:haspoint ESPOL:s31_09_ActivePower, ESPOL:s31_09_ApparentPower, ESPOL:s31_09_ReactivePower, ESPOL:s31_09_Factor, ESPOL:s31_09_Voltage, ESPOL:s31_09_Current
+	ESPOL:db_id Literal("s31_09")
+	
+Espol:s31_09_ActivePower a brick:Active_Power_Sensor
+Espol:s31_09_ApparentPower a brick:Power_Sensor 
+Espol:s31_09_ReactivePower a brick:Reactive_Power_Sensor
+Espol:s31_09_Factor a brick:Power_Factor_Sensor
+Espol:s31_09_Current a brick:Current_Sensor
+Espol:s31_09_Voltage a brick:Voltage_Sensor
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+

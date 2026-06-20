@@ -1,0 +1,27 @@
+Jardin trasero 
+---------------------------------------
+Nombre_Sensor: ESPOL:RIEGOLOOP_2024_S1 a brick:Sensor
+	brick:haspoint ESPOL:RIEGOLOOP_2024_S1_humidity
+
+ESPOL:RIEGOLOOP_2024_S1_humidity a brick:Humidity_Sensor
+
+
+
+Nombre_Sensor: ESPOL:RIEGOLOOP_2024_S2 a brick:Sensor
+	brick:haspoint ESPOL:RIEGOLOOP_2024_S2_humidity
+
+ESPOL:RIEGOLOOP_2024_S2_humidity a brick:Humidity_Sensor
+
+
+
+Nombre_Sensor: ESPOL:RIEGOLOOP_2024_S3 a brick:Sensor
+	brick:haspoint ESPOL:RIEGOLOOP_2024_S3_humidity
+
+ESPOL:RIEGOLOOP_2024_S3_humidity a brick:Humidity_Sensor
+
+
+
+Nombre_Sensor: ESPOL:RIEGOLOOP_2024_S4 a brick:Sensor
+	brick:haspoint ESPOL:RIEGOLOOP_2024_S4_humidity
+
+ESPOL:RIEGOLOOP_2024_S4_humidity a brick:Humidity_Sensor

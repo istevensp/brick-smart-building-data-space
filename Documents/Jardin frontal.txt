@@ -1,0 +1,12 @@
+Jardin frontal 
+---------------------------------------------------------------
+Nombre_Sensor: ESPOL:EM-LIoTST a brick:Sensor
+	brick:haspoint ESPOL:EM-LIoTST_Temperatura, ESPOL:EM-LIoTST_Humedad_Relativa, ESPOL:EM-LIoTST_PresBarométrica, ESPOL:EM-LIoTST_VelViento, ESPOL:EM-LIoTST_Dirección_Viento, ESPOL:EM-LIoTST_Precipitación
+	ESPOL:db_id Literal("EST_MET")
+
+ESPOL:EM-LIoTST_Temperatura a brick:Temperature_Sensor
+ESPOL:EM-LIoTST_Humedad_Relativa a brick:Relative_Humidity_Sensor
+ESPOL:EM-LIoTST_PresBarométrica a brick:Pressure_Sensor
+ESPOL:EM-LIoTST_VelViento a brick:Wind_Speed_Sensor
+ESPOL:EM-LIoTST_Dirección_Viento a brick:Wind_Direction_Sensor
+ESPOL:EM-LIoTST_Precipitación a brick:Rain_Level_Sensor

@@ -1,0 +1,527 @@
+[
+    {
+        "id": "da4a55b3415a9144",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c24384aede3a4bbb",
+        "type": "debug",
+        "z": "da4a55b3415a9144",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 400,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "5dec4b5eed58412c",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "",
+        "topic": "/LabIoT/sensores/EST_MET",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 80,
+        "wires": [
+            [
+                "c24384aede3a4bbb",
+                "22e63d009b5980a4",
+                "37795a987e606eb1"
+            ]
+        ]
+    },
+    {
+        "id": "5101b0eb260697b5",
+        "type": "influxdb out",
+        "z": "da4a55b3415a9144",
+        "influxdb": "26da50faa612a23d",
+        "name": "influxdb",
+        "measurement": "/EST_MET/sensor_data/data",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "ESPOL",
+        "bucket": "m1",
+        "x": 600,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "22e63d009b5980a4",
+        "type": "function",
+        "z": "da4a55b3415a9144",
+        "name": "function 1",
+        "func": "// Obtén el payload del mensaje\nvar test = msg.payload;\n\n// Obtén el timestamp actual en formato epoch time\nvar timestamp = new Date().getTime();\n\n// Define los campos con datos del array 'test.data' y agrega el timestamp\nvar fields = {\n    pressure: test.data[0].pressure,\n    temperature: test.data[1].temperature,\n    humidity: test.data[2].humidity,\n    altitude: test.data[3].altitude,\n    precipitation: test.data[4].precipitation,\n    velocity: test.data[5].velocity,\n    direction: test.data[6].direction,\n\n    \n    timestamp: timestamp // Agrega el timestamp como un campo adicional\n};\n\n// Asigna el objeto 'fields' al payload del mensaje\nmsg.payload = fields;\n\n// Devuelve el mensaje\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "1",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 140,
+        "wires": [
+            [
+                "5101b0eb260697b5"
+            ]
+        ]
+    },
+    {
+        "id": "ada7189d145cdf79",
+        "type": "http request",
+        "z": "da4a55b3415a9144",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://aias.espol.edu.ec/api/hayiot/sensores/",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 610,
+        "y": 200,
+        "wires": [
+            [
+                "250f38b377feb0cd"
+            ]
+        ]
+    },
+    {
+        "id": "37795a987e606eb1",
+        "type": "function",
+        "z": "da4a55b3415a9144",
+        "name": "function 2",
+        "func": "var test = msg.payload;\n\n// Define los campos con datos del array 'test.data'\nvar fields = {\n    pressure: test.data[0].pressure,\n    temperature: test.data[1].temperature,\n    humidity: test.data[2].humidity,\n    altitude: test.data[3].altitude,\n    precipitation: test.data[4].precipitation,\n    velocity: test.data[5].velocity,\n    direction: test.data[6].direction\n};\n\n// Construye el cuerpo de la solicitud HTTP\nvar http_body = {\n    id: '66cf5b6afb392de5096ea84d',\n    data: [\n        { val: fields.pressure, type: 'atmospheric-pressure' },\n        { val: fields.temperature, type: 'temp' },\n        { val: fields.humidity, type: 'humidity' },\n        { val: fields.altitude, type: 'altitude' },\n        { val: fields.precipitation, type: 'precipitation' },\n        { val: fields.velocity, type: 'air-velocity' },\n        { val: fields.direction, type: 'wind-direction' }\n    ],\n    sensedAt: \"\" // Puedes agregar un timestamp aquí si es necesario\n};\n\n// Asigna el objeto `http_body` a `msg.payload`\nmsg.payload = http_body;\n\n// Devuelve el mensaje\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 200,
+        "wires": [
+            [
+                "ada7189d145cdf79"
+            ]
+        ]
+    },
+    {
+        "id": "250f38b377feb0cd",
+        "type": "debug",
+        "z": "da4a55b3415a9144",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "ab14beb850d4a79a",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "",
+        "topic": "s31/inv_01/+/SENSOR",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 320,
+        "wires": [
+            [
+                "d9bae3cfebd66be9"
+            ]
+        ]
+    },
+    {
+        "id": "d9bae3cfebd66be9",
+        "type": "function",
+        "z": "da4a55b3415a9144",
+        "name": "MongoDBPayload2",
+        "func": "let sensor_id = msg.topic.split(\"/\")[2];\nlet sensedAt = new Date().getTime();\nlet energy_data = msg.payload.ENERGY\nlet body = {\n    sensorID : sensor_id,\n    data : energy_data,\n    timestamp : sensedAt\n}\n\nreturn { payload: body };",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 320,
+        "wires": [
+            [
+                "9093991d776de45f"
+            ]
+        ]
+    },
+    {
+        "id": "1c1734702fb4ed85",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "",
+        "topic": "shellies/#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 420,
+        "wires": [
+            [
+                "440a210c5b17cba0"
+            ]
+        ]
+    },
+    {
+        "id": "cbe8368df5c0f745",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "",
+        "topic": "/LabIoT/sensores/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 520,
+        "wires": [
+            [
+                "e172632d87cd5350",
+                "bd16c8487e93038b"
+            ]
+        ]
+    },
+    {
+        "id": "9093991d776de45f",
+        "type": "debug",
+        "z": "da4a55b3415a9144",
+        "name": "debug 5",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "440a210c5b17cba0",
+        "type": "debug",
+        "z": "da4a55b3415a9144",
+        "name": "debug 6",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "e172632d87cd5350",
+        "type": "function",
+        "z": "da4a55b3415a9144",
+        "name": "MongoDBPayload",
+        "func": "let sensor_id = msg.topic.split(\"/\")[3];\nlet datalist = msg.payload.data;\nlet data_payload = {};\n\nfor (let index = 0; index < datalist.length; index++) {\n    data_payload[Object.keys(datalist[index])] = Object.values(datalist[index])[0];\n}\n\n\nlet sensedAt = new Date().getTime();\nlet msg_body = {\n    sensorID : sensor_id,\n    data : data_payload,\n    timestamp : sensedAt\n}\nreturn { payload: msg_body};",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 680,
+        "wires": [
+            [
+                "46cc9f2119dabbe5"
+            ]
+        ]
+    },
+    {
+        "id": "46cc9f2119dabbe5",
+        "type": "debug",
+        "z": "da4a55b3415a9144",
+        "name": "debug 7",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "234bbcf61aebd0ae",
+        "type": "switch",
+        "z": "da4a55b3415a9144",
+        "name": "switchSensorName",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "airQ1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "airQ2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "airQ3",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "airQ4",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "airQ5",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "EST_MET",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 6,
+        "x": 590,
+        "y": 520,
+        "wires": [
+            [
+                "7679f7b1417b301b"
+            ],
+            [
+                "6961722f50f24a3f"
+            ],
+            [
+                "c9fc3d4f9b04d682"
+            ],
+            [
+                "fb6b3b4c9b0ec57e"
+            ],
+            [
+                "f955e159b564f96c"
+            ],
+            [
+                "4efba6d1c1b2bf7a"
+            ]
+        ]
+    },
+    {
+        "id": "bd16c8487e93038b",
+        "type": "function",
+        "z": "da4a55b3415a9144",
+        "name": "GetSensorID",
+        "func": "let sensor_id = msg.topic.split(\"/\")[3];\nreturn {payload : sensor_id};",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 520,
+        "wires": [
+            [
+                "234bbcf61aebd0ae"
+            ]
+        ]
+    },
+    {
+        "id": "7679f7b1417b301b",
+        "type": "debug",
+        "z": "da4a55b3415a9144",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "6961722f50f24a3f",
+        "type": "debug",
+        "z": "da4a55b3415a9144",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "c9fc3d4f9b04d682",
+        "type": "debug",
+        "z": "da4a55b3415a9144",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "fb6b3b4c9b0ec57e",
+        "type": "debug",
+        "z": "da4a55b3415a9144",
+        "name": "debug 11",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "f955e159b564f96c",
+        "type": "debug",
+        "z": "da4a55b3415a9144",
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "4efba6d1c1b2bf7a",
+        "type": "debug",
+        "z": "da4a55b3415a9144",
+        "name": "debug 13",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "938858c8b5c0abef",
+        "type": "mqtt-broker",
+        "name": "mqtt2",
+        "broker": "200.126.14.229",
+        "port": "1883",
+        "clientid": "BrickNodeRed",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": false,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "26da50faa612a23d",
+        "type": "influxdb",
+        "hostname": "http://200.126.14.232",
+        "port": "8096",
+        "protocol": "http",
+        "database": "m1",
+        "name": "influxdb",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://200.126.14.232:8096",
+        "timeout": "10",
+        "rejectUnauthorized": false
+    }
+]

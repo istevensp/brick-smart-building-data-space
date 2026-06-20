@@ -1,0 +1,254 @@
+PREFIX espol: <https://www.espol.edu.ec/ESPOL#> 
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+# GET all sensors from an equipment and their db_id attribute
+SELECT ?sensor ?equipment ?unit ?db_id
+WHERE {
+  ?sensor brick:isPointOf ?equipment .
+  
+  OPTIONAL { ?sensor brick:hasUnit ?unit. }
+
+  ?equipment a brick:Equipment ;
+             espol:db_id ?db_id .
+}
+
+# GET all properties of an entity
+SELECT ?property ?value
+WHERE {
+  espol:MyEntity ?property ?value .
+}
+
+# UPDATE an entity property
+DELETE {
+  espol:"ENTITY" brick:"PROPERTY" ?oldProperty .
+}
+INSERT {
+  espol:"ENTITY" brick:"PROPERTY" espol/brick:"NEWPROPERTY" .
+}
+WHERE {
+  espol:"ENTITY" brick:"PROPERTY" ?oldPROPERTY .
+}
+
+
+
+PREFIX brick: <https://brickschema.org/schema/Brick#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT ?class ?label
+WHERE {
+  ?class a owl:Class .
+  FILTER(STRSTARTS(STR(?class), STR(brick:)))
+  OPTIONAL { ?class rdfs:label ?label }
+}
+ORDER BY ?label
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX brick: <https://brickschema.org/schema/Brick#>
+
+SELECT ?sensor
+WHERE {
+  ?sensor rdf:type brick:Sensor .
+}
+PREFIX brick: <https://brickschema.org/schema/Brick#> 
+PREFIX espol: <https://www.espol.edu.ec/ESPOL#> 
+SELECT ?sensor ?equipment ?unit ?db_id ?type
+WHERE {
+  ?sensor brick:isPointOf ?equipment .
+  OPTIONAL { ?sensor brick:hasUnit ?unit. }
+  ?sensor espol:point_type ?type .
+  ?equipment a brick:Equipment ;
+                     espol:db_id ?db_id .
+  FILTER(STRSTARTS(STR(?sensor), STR(espol:)))
+}
+
+
+PREFIX brick: <https://brickschema.org/schema/Brick#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rec: <https://w3id.org/rec#>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+SELECT ?property ?value ?subvalue
+WHERE {
+  #
+  rec:Architecture ?property ?value.
+  
+  # Only explore subproperties if the value is a SHACL PropertyShape
+  OPTIONAL {
+    ?value a sh:PropertyShape.
+    ?value sh:name ?subvalue.
+  }
+}
+
+
+#include <stdio.h>
+#include "driver/gpio.h"
+#include "esp_event.h"
+#include "esp_log.h"
+#include "esp_timer.h"
+#include "rom/ets_sys.h"
+
+#define CONFIG_LOG_MAXIMUM_LEVEL 3
+#define DATA_TRANSF_SIZE 5 // 5 BYTES = 40 BITS
+
+
+esp_err_t dht11_init(gpio_num_t pin);
+
+esp_err_t dht11_get_temphum(float *humidity, float *temperature);
+
+gpio_num_t dht_pin;
+
+void app_main(void)
+{
+    float t, h;
+    ESP_ERROR_CHECK(dht11_init(GPIO_NUM_21));
+    ESP_ERROR_CHECK(dht11_get_temphum(&h, &t));
+    for(;;){
+        vTaskDelay(1000/portTICK_PERIOD_MS);
+    }
+
+}
+
+esp_err_t dht11_init(gpio_num_t pin)
+{
+    dht_pin = pin;
+    gpio_config_t io_conf = {
+        .intr_type = GPIO_INTR_DISABLE,       // Disable interrupt
+        .mode = GPIO_MODE_INPUT_OUTPUT_OD,             // Set as output mode
+        .pin_bit_mask = (1ULL << dht_pin
+        ), // Bit mask for GPIO 4
+        };
+    esp_err_t msg = gpio_config(&io_conf);
+    if (msg != ESP_OK){
+        ESP_LOGI("DHT INIT", "Failed to configure GPIO PIN");
+        return msg;
+    };
+    msg = gpio_set_level(pin, 1);
+    if (msg != ESP_OK){
+        ESP_LOGI("DHT INIT", "Failed to configure GPIO PIN");
+        return msg;
+    };
+    return ESP_OK;
+};
+
+esp_err_t dht11_get_temphum(float *humidity, float *temperature){
+    esp_err_t msg;
+    //uint8_t data[5];
+    /*
+     * Initialize the communication by sending out the start signal:
+     *       __           __________________                         _______________                                ____________________
+     * GPIO    \  Start  / Pull-up and wait \  Response ACK signal  /  DHT pull-up  \   Start transmit 1-bit data  /    Data(1-bit)     \   Start transmit 1-bit data 
+     *          \_______/                    \_____________________/                 \____________________________/                      \____ . . . .
+     *          |  18ms |      20-40 us      |        80us         |       80us      |           50us             |   26-28us OR 70us     |         50us
+     */
+    msg = gpio_set_level(dht_pin, 0);
+    if (msg != ESP_OK){
+        ESP_LOGI("GPIO", "ERROR SET DIRECTION 0: %x", msg);
+        return msg;
+    };
+    vTaskDelay(18/portTICK_PERIOD_MS);
+    msg = gpio_set_level(dht_pin, 1);
+    if (msg != ESP_OK){
+        ESP_LOGI("GPIO", "ERROR SET DIRECTION 1: %x", msg);
+        return msg;
+    };
+    ets_delay_us(40);
+    if (gpio_get_level(dht_pin)){
+        ESP_LOGI("DHT", "ACK FAILED.");
+        return ESP_ERR_NOT_FINISHED;
+    }else{
+        ets_delay_us(80);
+        if(gpio_get_level(dht_pin)){
+            ESP_LOGI("DHT", "DEV PULL-UP!");
+            ets_delay_us(80);
+        }else{
+            ESP_LOGI("DHT", "DEV PULL-UP FAILED.");
+            return ESP_ERR_NOT_FINISHED;
+        }
+    };
+    for(int i = 0; i < DATA_TRANSF_SIZE; i++){
+        for(int j = 0; j < 8; j++){
+            int count = 0;
+            ets_delay_us(50);
+            while(gpio_get_level(dht_pin) == 1){
+                count++;
+            }
+            printf("COUNT: %d", count);
+        }
+    }
+    return ESP_OK;
+};
+
+
+{
+  "database_id": "21b97551-844e-8093-b976-e9cfeca3665a"
+  G%5Dbv
+  KMS%7D
+  m%3E%3Av
+  w%3CQE
+}
+
+PREFIX brick: <https://brickschema.org/schema/Brick#> 
+PREFIX espol: <https://www.espol.edu.ec/ESPOL#> 
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?equipment ?unit ?db_id ?type
+WHERE {
+  espol:EM-LIoTST_Direccion_Viento brick:isPointOf ?equipment .
+  OPTIONAL { espol:EM-LIoTST_Direccion_Viento brick:hasUnit ?unit. }
+  espol:EM-LIoTST_Direccion_Viento espol:point_type ?type .
+  ?equipment a brick:Equipment ;
+             espol:db_id ?db_id .
+}
+
+
+brick:Point a owl:Class,
+        sh:NodeShape ;
+    rdfs:label "Point"@en ;
+    rdfs:subClassOf brick:Class,
+        brick:Entity ;
+    sh:not [ sh:class brick:Equipment ;
+            sh:message "Instances of Point cannot be Equipment." ],
+        [ sh:class brick:Location ;
+            sh:message "Instances of Point cannot be Locations." ],
+        [ sh:class brick:Substance ;
+            sh:message "Instances of Point cannot be Substances." ],
+        [ sh:class brick:Quantity ;
+            sh:message "Instances of Point cannot be Quantities." ],
+        [ sh:class brick:Collection ;
+            sh:message "Instances of Point cannot be Collections." ],
+        [ sh:class brick:EntityProperty ;
+            sh:message "Instances of Point cannot be EntityProperties." ] ;
+    sh:property [ sh:maxCount 0 ;
+            sh:message "Points cannot have locations; use 'isPointOf' instead" ;
+            sh:path brick:hasLocation ],
+        [ a sh:PropertyShape ;
+            sh:class brick:Quantity ;
+            sh:name "has quantity" ;
+            sh:nodeKind sh:IRI ;
+            sh:path brick:hasQuantity ],
+        [ a sh:PropertyShape ;
+            sh:class brick:Substance ;
+            sh:name "has substance" ;
+            sh:nodeKind sh:IRI ;
+            sh:path brick:hasSubstance ],
+        [ a sh:PropertyShape ;
+            sh:name "is point of" ;
+            sh:nodeKind sh:IRI ;
+            sh:path rec:isPointOf ],
+        bsh:hasQuantityShape,
+        bsh:hasSubstanceShape,
+        bsh:hasUnitShape,
+        bsh:hasaggregateShape,
+        bsh:haselectricalComplexPowerShape,
+        bsh:haselectricalFlowShape,
+        bsh:haslastKnownValueShape,
+        bsh:hasresolutionShape,
+        bsh:isPointOfShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:object tag:Point ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ] ;
+    brick:hasAssociatedTag tag:Point .

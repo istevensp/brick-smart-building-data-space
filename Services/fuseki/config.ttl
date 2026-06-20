@@ -1,0 +1,47 @@
+PREFIX fuseki:  <http://jena.apache.org/fuseki#>
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX tdb2:    <http://jena.apache.org/2016/tdb#>
+PREFIX ja:      <http://jena.hpl.hp.com/2005/11/Assembler#>
+PREFIX :        <#>
+
+[] rdf:type fuseki:Server ;
+   fuseki:services (:serviceESPOL) ;
+   fuseki:shiroFile "shiro.ini" ;
+   fuseki:auth "basic" .
+
+:serviceESPOL rdf:type fuseki:Service ;
+    fuseki:name "brickESPOL" ;
+    fuseki:dataset :brickESPOL ;
+    fuseki:endpoint [
+        fuseki:operation fuseki:query ;
+        fuseki:name "sparql"
+    ] ;
+    fuseki:endpoint [
+        fuseki:operation fuseki:update ;
+        fuseki:name "update"
+    ] ;
+    fuseki:endpoint [
+        fuseki:operation fuseki:gsp-r ;
+        fuseki:name "get"
+    ] ;
+    fuseki:endpoint [
+        fuseki:operation fuseki:gsp-rw ;
+        fuseki:name "schema"
+    ] ;
+    fuseki:endpoint [
+        fuseki:operation fuseki:patch ;
+        fuseki:name "patch"
+    ] .
+
+:brickESPOL rdf:type ja:RDFDataset ;
+    ja:defaultGraph :brickESPOLInfModel .
+
+:brickESPOLInfModel rdf:type ja:InfModel ;
+    ja:baseModel :brickESPOLBase ;
+    ja:reasoner [
+        ja:reasonerURL <http://jena.hpl.hp.com/2003/RDFSExptRuleReasoner>
+    ] .
+
+:brickESPOLBase rdf:type tdb2:GraphTDB2 ;
+    tdb2:location "/fuseki/databases/brickESPOL" .

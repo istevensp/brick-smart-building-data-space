@@ -320,4 +320,19 @@ Update this entry with the final venue, DOI, and publication details when availa
 
 ## License
 
-This repository is recommended to be released under the **MIT License** unless the project team, institution, funding conditions, or future publication agreements require a different license. Add the final license text in the `LICENSE` file before publishing the repository.
+This project is licensed under the GNU Affero General Public License v3.0 only
+(AGPL-3.0-only).
+
+You may use, study, modify, and redistribute this software under the terms of
+the AGPL-3.0-only license. If you modify this software and make it available to
+users over a network, you must also provide those users with access to the
+corresponding source code of the modified version.
+
+Unless otherwise stated, this license applies to the source code, Node-RED
+flows, RDF/TTL semantic models, SPARQL queries, SHACL constraints, deployment
+scripts, and example configurations included in this repository.
+
+Third-party libraries, frameworks, and dependencies remain subject to their
+respective licenses.
+
+See the [LICENSE](LICENSE) file for the full license text.

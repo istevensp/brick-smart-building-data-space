@@ -21,7 +21,7 @@ g.bind("owl", OWL)
 # Mapeo de clase de sensor → unidad correspondiente
 CLASS_TO_UNIT = {
     "Active_Power_Sensor":      "W",           # Watts
-    "Power_Sensor":             "V-A",          # Volt-Amperios
+    "Power_Sensor":             "VA",          # Volt-Amperios
     "Reactive_Power_Sensor":    "VAR",         # Volt-Amperios Reactivos
     "Power_Factor_Sensor":      None,          # adimensional valor solo de 100 o 0
     "Current_Sensor":           "A",           # Amperios
@@ -80,7 +80,6 @@ g.add((ESPOL["fiecPA"], REC.postalCode, Literal("EC090112")))
 
 # Nodo 1: ESPOL - Campus, Organization (Collection, Agent)
 g.add((ESPOL["ESPOL"], A, REC["Campus"]))
-g.add((ESPOL["ESPOL"], A, BRICK["Site"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["ESPOL"], A, REC["Organization"]))
 g.add((ESPOL["ESPOL"], REC.hasPart, ESPOL["FIEC"])) # Organization Property to domain(Department)
 g.add((ESPOL["ESPOL"], RDFS.label, Literal("Escuela Superior Politécnica del Litoral")))
@@ -88,13 +87,12 @@ g.add((ESPOL["ESPOL"], REC.includes, ESPOL["11C"])) # Campus property to domain(
 
 # Nodo 2: FIEC - Department (Agent)
 g.add((ESPOL["FIEC"], A, REC["Department"]))
-g.add((ESPOL["FIEC"], REC.logo, Literal("https://www.fiec.espol.edu.ec/sites/fiec.espol.edu.ec/files/logoFIEC2022.jpg", datatype=XSD.anyURI)))  # rec:logo is typed xsd:anyURI
+g.add((ESPOL["FIEC"], REC.logo, Literal("https://www.fiec.espol.edu.ec/sites/fiec.espol.edu.ec/files/logoFIEC2022.jpg"))) # Department property
 g.add((ESPOL["FIEC"], REC.isPartOf, ESPOL["ESPOL"])) # Department property to domain(Organization)
 g.add((ESPOL["FIEC"], REC.owns, ESPOL["11C"])) # Department property to domain(Resource)
 
 # Nodo 3: Edificio 11C - Building (Space)
 g.add((ESPOL["11C"], A, REC["Building"]))
-g.add((ESPOL["11C"], A, BRICK["Building"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["11C"], REC.address, ESPOL["fiecPA"])) # Building property
 g.add((ESPOL["11C"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 # g.add((ESPOL["11C"], REC.operator, Literal("Ph. D. Jorge Aragundi Rodríguez")))
@@ -103,11 +101,9 @@ g.add((ESPOL["11C"], REC.hasPart, ESPOL["11C-Piso2"])) # Space property to domai
 
 # Nodo 4: Edificio 11C - Pisos - Level (Space)
 g.add((ESPOL["11C-Piso1"], A, REC["Level"]))
-g.add((ESPOL["11C-Piso1"], A, BRICK["Floor"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["11C-Piso2"], A, REC["Level"]))
-g.add((ESPOL["11C-Piso2"], A, BRICK["Floor"]))  # brick:hasLocation requires a brick:Location
-g.add((ESPOL["11C-Piso1"], REC.levelNumber, Literal(1, datatype=XSD.integer)))  # rec:levelNumber is typed xsd:integer
-g.add((ESPOL["11C-Piso2"], REC.levelNumber, Literal(2, datatype=XSD.integer)))  # rec:levelNumber is typed xsd:integer
+g.add((ESPOL["11C-Piso1"], REC.levelNumber, Literal('1'))) # Level Property
+g.add((ESPOL["11C-Piso2"], REC.levelNumber, Literal('2'))) # Level Property
 g.add((ESPOL["11C-Piso1"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 g.add((ESPOL["11C-Piso2"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 g.add((ESPOL["11C-Piso1"], REC.isPartOf, ESPOL["11C"])) # Space property to domain(Space)
@@ -115,14 +111,13 @@ g.add((ESPOL["11C-Piso2"], REC.isPartOf, ESPOL["11C"])) # Space property to doma
 g.add((ESPOL["11C-Piso1"], BRICK.hasTag, TAG["Floor"]))
 g.add((ESPOL["11C-Piso2"], BRICK.hasTag, TAG["Floor"]))
 g.add((ESPOL["11C-Piso1"], REC.hasPart, ESPOL["LabIoT"])) # Space property to domain(Space)
-g.add((ESPOL["ESPOL"], REC.hasPart, ESPOL["JardinFrontal"]))  # outdoor space of the campus: a building cannot contain a garden
-g.add((ESPOL["ESPOL"], REC.hasPart, ESPOL["JardinTrasero"]))  # outdoor space of the campus: a building cannot contain a garden
+g.add((ESPOL["11C-Piso1"], REC.hasPart, ESPOL["JardinFrontal"])) # Space property to domain(Space)
+g.add((ESPOL["11C-Piso1"], REC.hasPart, ESPOL["JardinTrasero"])) # Space property to domain(Space)
 g.add((ESPOL["11C-Piso2"], REC.hasPart, ESPOL["LabRedesDeDatos"])) # Space property to domain(Space)
 g.add((ESPOL["11C-Piso2"], REC.hasPart, ESPOL["LabSistemasEnLaNube"])) # Space property to domain(Space)
 
 # Nodo 5: lab_telematica - Laboratory (Space)
 g.add((ESPOL["LabIoT"], A, REC["Laboratory"]))
-g.add((ESPOL["LabIoT"], A, BRICK["Laboratory"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["LabIoT"], REC.isPartOf, ESPOL["11C-Piso1"])) # Space property to domain(Space)
 g.add((ESPOL["LabIoT"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 # g.add((ESPOL["LabIoT"], BRICK.designer, ESPOL["FIEC"]))
@@ -131,19 +126,16 @@ g.add((ESPOL["LabIoT"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (
 
 # Nodo 6: Jardin frontal - OutdoorSpace
 g.add((ESPOL["JardinFrontal"], A, REC["OutdoorSpace"]))
-g.add((ESPOL["JardinFrontal"], A, BRICK["Outdoor_Area"]))  # brick:hasLocation requires a brick:Location
-g.add((ESPOL["JardinFrontal"], REC.isPartOf, ESPOL["ESPOL"]))  # a garden belongs to the campus, not to a building or a floor
+g.add((ESPOL["JardinFrontal"], REC.isPartOf, ESPOL["11C-Piso1"]))    # Cambie aqui al edificio 1 piso 1 porque el jardin esta en ese lugar especificamente
 g.add((ESPOL["JardinFrontal"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 
 # Nodo 7: Jardín Trasero - OutdoorSpace
 g.add((ESPOL["JardinTrasero"], A, REC["OutdoorSpace"]))
-g.add((ESPOL["JardinTrasero"], A, BRICK["Outdoor_Area"]))  # brick:hasLocation requires a brick:Location
-g.add((ESPOL["JardinTrasero"], REC.isPartOf, ESPOL["ESPOL"]))  # a garden belongs to the campus, not to a building or a floor
+g.add((ESPOL["JardinTrasero"], REC.isPartOf, ESPOL["11C-Piso1"]))     # Cambie aqui al edificio 1 piso 1 porque el jardin esta en ese lugar especificamente
 g.add((ESPOL["JardinTrasero"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 
 #nodo 8: Lab_RedesDeDatos
 g.add((ESPOL["LabRedesDeDatos"], A, REC["Laboratory"]))
-g.add((ESPOL["LabRedesDeDatos"], A, BRICK["Laboratory"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["LabRedesDeDatos"], REC.isPartOf, ESPOL["11C-Piso2"]))
 g.add((ESPOL["LabRedesDeDatos"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 # g.add((ESPOL["LabRedesDeDatos"], BRICK.designer, ESPOL["FIEC"]))
@@ -152,7 +144,6 @@ g.add((ESPOL["LabRedesDeDatos"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agen
 
 # Nodo 9: Lab_SistemasEnLaNube
 g.add((ESPOL["LabSistemasEnLaNube"], A, REC["Laboratory"]))
-g.add((ESPOL["LabSistemasEnLaNube"], A, BRICK["Laboratory"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["LabSistemasEnLaNube"], REC.isPartOf, ESPOL["11C-Piso2"]))
 g.add((ESPOL["LabSistemasEnLaNube"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 # g.add((ESPOL["LabSistemasEnLaNube"], BRICK.designer, ESPOL["FIEC"]))
@@ -166,8 +157,8 @@ zonas_sensores_LabIoT = {
             "db_id": "11C-LabIoT:s31_01", # ESPOL:db_id Literal("s31_01")
             "point": [
                 {"id": "s31_01_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"}, 
-                {"id": "s31_01_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_01_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_01_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_01_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_01_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},  # Sin unidad
                 {"id": "s31_01_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
                 {"id": "s31_01_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"}
@@ -177,8 +168,8 @@ zonas_sensores_LabIoT = {
             "db_id": "11C-LabIoT:s31_02", # ESPOL:db_id Literal("s31_02")
             "point": [
                 {"id": "s31_02_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_02_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_02_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_02_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_02_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_02_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_02_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
                 {"id": "s31_02_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"}
@@ -187,9 +178,9 @@ zonas_sensores_LabIoT = {
         "s31_05": { # ID del sensor
             "db_id": "11C-LabIoT:s31_05", #ESPOL:db_id Literal("s31_05")
             "point": [
-                {"id": "s31_05_ActivePower",   "class": "Active_Power_Sensor",   "unit":"W", "type":"power"},
-                {"id": "s31_05_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_05_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_05_ActivePower",   "class": "Active_Power_Sensor",   "unit":"w", "type":"power"},
+                {"id": "s31_05_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_05_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_05_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_05_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
                 {"id": "s31_05_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"}
@@ -208,9 +199,9 @@ zonas_sensores_LabIoT = {
         "s31_06":{ # ID del sensor
             "db_id":"11C-LabIoT:s31_06", #ESPOL:db_id Literal("s31_06")
             "point": [
-                {"id": "s31_06_ActivePower",   "class": "Active_Power_Sensor",   "unit":"W", "type":"power"},
-                {"id": "s31_06_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_06_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_06_ActivePower",   "class": "Active_Power_Sensor",   "unit":"w", "type":"power"},
+                {"id": "s31_06_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_06_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_06_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_06_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
                 {"id": "s31_06_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"}
@@ -256,8 +247,8 @@ zonas_sensores_LabIoT = {
             "db_id":"11C-LabIoT:s31_10", #ESPOL:db_id Literal("s31_10")
             "point": [
                 {"id": "s31_10_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_10_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_10_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_10_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_10_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_10_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_10_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
                 {"id": "s31_10_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"}
@@ -267,8 +258,8 @@ zonas_sensores_LabIoT = {
             "db_id":"11C-LabIoT:s31_11", #ESPOL:db_id Literal("s31_11")
             "point": [
                 {"id": "s31_11_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_11_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_11_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_11_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_11_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_11_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_11_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
                 {"id": "s31_11_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"}
@@ -304,8 +295,8 @@ zonas_sensores_LabIoT = {
             "db_id":"11C-LabIoT:s31_08", #ESPOL:db_id Literal("s31_08")            
             "point": [
                 {"id": "s31_08_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_08_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_08_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_08_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_08_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_08_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_08_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
                 {"id": "s31_08_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"}
@@ -315,8 +306,8 @@ zonas_sensores_LabIoT = {
             "db_id":"11C-LabIoT:s31_09", #ESPOL:db_id Literal("s31_09")
             "point": [
                 {"id": "s31_09_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_09_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_09_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_09_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_09_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_09_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_09_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
                 {"id": "s31_09_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"}
@@ -404,8 +395,8 @@ zonas_sensores_LabIoT = {
             "db_id":"11C-LabIoT:s31_03", #ESPOL:db_id Literal("s31_03")
             "point": [
                 {"id": "s31_03_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_03_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_03_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_03_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_03_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_03_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_03_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
                 {"id": "s31_03_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"}
@@ -415,8 +406,8 @@ zonas_sensores_LabIoT = {
             "db_id":"11C-LabIoT:s31_07", #ESPOL:db_id Literal("s31_07")
             "point":[
                 {"id": "s31_07_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_07_ApparentPower", "class": "Power_Sensor",         "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_07_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_07_ApparentPower", "class": "Power_Sensor",         "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_07_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_07_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_07_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
                 {"id": "s31_07_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"}
@@ -428,9 +419,9 @@ zonas_sensores_LabIoT = {
                 {"id": "Accuenergy_voltaje_A",              "class": "Voltage_Sensor",        "unit": "V", "type":"voltageA"},
                 {"id": "Accuenergy_voltaje_B",              "class": "Voltage_Sensor",        "unit": "V", "type":"voltageB"},
                 {"id": "Accuenergy_voltaje_C",              "class": "Voltage_Sensor",        "unit": "V", "type":"voltageC"},
-                {"id": "Accuenergy_potencia_aparente_A",    "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpowerA"},
-                {"id": "Accuenergy_potencia_aparente_B",    "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpowerB"},
-                {"id": "Accuenergy_potencia_aparente_C",    "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpowerC"},
+                {"id": "Accuenergy_potencia_aparente_A",    "class": "Power_Sensor",          "unit": "VA", "type":"apparentpowerA"},
+                {"id": "Accuenergy_potencia_aparente_B",    "class": "Power_Sensor",          "unit": "VA", "type":"apparentpowerB"},
+                {"id": "Accuenergy_potencia_aparente_C",    "class": "Power_Sensor",          "unit": "VA", "type":"apparentpowerC"},
                 {"id": "Accuenergy_factor_potencia_A",      "class": "Power_Factor_Sensor",   "unit": None, "type":"pfA"},
                 {"id": "Accuenergy_factor_potencia_B",      "class": "Power_Factor_Sensor",   "unit": None, "type":"pfB"},
                 {"id": "Accuenergy_factor_potencia_C",      "class": "Power_Factor_Sensor",   "unit": None, "type":"pfC"},
@@ -440,9 +431,9 @@ zonas_sensores_LabIoT = {
                 {"id": "Accuenergy_corriente_A",            "class": "Current_Sensor",        "unit": "A", "type":"currentA"},
                 {"id": "Accuenergy_corriente_B",            "class": "Current_Sensor",        "unit": "A", "type":"currentB"},
                 {"id": "Accuenergy_corriente_C",            "class": "Current_Sensor",        "unit": "A", "type":"currentC"},
-                {"id": "Accuenergy_potencia_reactiva_A",    "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepowerA"},
-                {"id": "Accuenergy_potencia_reactiva_B",    "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepowerB"},
-                {"id": "Accuenergy_potencia_reactiva_C",    "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepowerC"}
+                {"id": "Accuenergy_potencia_reactiva_A",    "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepowerA"},
+                {"id": "Accuenergy_potencia_reactiva_B",    "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepowerB"},
+                {"id": "Accuenergy_potencia_reactiva_C",    "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepowerC"}
             ]
         }
     },
@@ -469,8 +460,8 @@ zonas_Sensores_LabSitemasNube = {
             "db_id":"11C-LabSN:s31_19", #ESPOL:db_id Literal("s31_19")
             "point": [
                 {"id": "s31_19_Router_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_19_Router_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_19_Router_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_19_Router_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_19_Router_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_19_Router_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_19_Router_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"},
                 {"id": "s31_19_Router_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
@@ -480,8 +471,8 @@ zonas_Sensores_LabSitemasNube = {
             "db_id":"11C-LabSN:s31_20", #ESPOL:db_id Literal("s31_20")
             "point": [
                 {"id": "s31_20_Server_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_20_Server_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_20_Server_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_20_Server_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_20_Server_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_20_Server_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_20_Server_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"},
                 {"id": "s31_20_Server_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
@@ -493,8 +484,8 @@ zonas_Sensores_LabSitemasNube = {
             "db_id":"11C-LabSN:s31_13", #ESPOL:db_id Literal("s31_13")
             "point": [
                 {"id": "s31_13_Profesor_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_13_Profesor_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_13_Profesor_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_13_Profesor_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_13_Profesor_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_13_Profesor_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_13_Profesor_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"},
                 {"id": "s31_13_Profesor_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
@@ -504,8 +495,8 @@ zonas_Sensores_LabSitemasNube = {
             "db_id":"11C-LabSN:s31_14", #ESPOL:db_id Literal("s31_14")
             "point": [
                 {"id": "s31_14_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_14_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_14_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_14_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_14_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_14_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_14_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"},
                 {"id": "s31_14_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
@@ -517,8 +508,8 @@ zonas_Sensores_LabSitemasNube = {
             "db_id":"11C-LabSN:s31_16", #ESPOL:db_id Literal("s31_16")
             "point": [
                 {"id": "s31_16_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_16_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_16_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_16_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_16_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_16_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_16_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"},
                 {"id": "s31_16_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
@@ -530,8 +521,8 @@ zonas_Sensores_LabSitemasNube = {
             "db_id":"11C-LabSN:s31_12", #ESPOL:db_id Literal("s31_12")
             "point": [
                 {"id": "s31_12_Proyector_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_12_Proyector_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_12_Proyector_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_12_Proyector_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_12_Proyector_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_12_Proyector_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_12_Proyector_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"},
                 {"id": "s31_12_Proyector_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
@@ -541,8 +532,8 @@ zonas_Sensores_LabSitemasNube = {
             "db_id":"11C-LabSN:s31_15", #ESPOL:db_id Literal("s31_12")
             "point": [
                 {"id": "s31_15_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_15_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_15_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_15_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_15_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_15_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_15_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"},
                 {"id": "s31_15_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
@@ -554,8 +545,8 @@ zonas_Sensores_LabSitemasNube = {
             "db_id":"11C-LabSN:s31_17", #ESPOL:db_id Literal("s31_17")
             "point": [
                 {"id": "s31_17_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_17_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_17_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_17_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_17_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_17_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_17_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"},
                 {"id": "s31_17_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
@@ -565,8 +556,8 @@ zonas_Sensores_LabSitemasNube = {
             "db_id":"11C-LabSN:s31_18", #ESPOL:db_id Literal("s31_18")
             "point": [
                 {"id": "s31_18_ActivePower",   "class": "Active_Power_Sensor",   "unit": "W", "type":"power"},
-                {"id": "s31_18_ApparentPower", "class": "Power_Sensor",          "unit": "V-A", "type":"apparentpower"},
-                {"id": "s31_18_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "V-A_Reactive", "type":"reactivepower"},
+                {"id": "s31_18_ApparentPower", "class": "Power_Sensor",          "unit": "VA", "type":"apparentpower"},
+                {"id": "s31_18_ReactivePower", "class": "Reactive_Power_Sensor", "unit": "VAR", "type":"reactivepower"},
                 {"id": "s31_18_Factor",        "class": "Power_Factor_Sensor",   "unit": None, "type":"factor"},
                 {"id": "s31_18_Voltage",       "class": "Voltage_Sensor",        "unit": "V", "type":"voltage"},
                 {"id": "s31_18_Current",       "class": "Current_Sensor",        "unit": "A", "type":"current"},
@@ -610,12 +601,9 @@ zonas_sensores_RedesDatos={
 def crear_zonas_sensores_LabIoT():
     for zona, sensores in zonas_sensores_LabIoT.items():
         # 1) Crear la zona
-        # Outdoor spaces are typed above and are not zones of the laboratory.
-        if zona not in ["JardinFrontal", "JardinTrasero"]:
-            g.add((ESPOL[zona], A, REC["Zone"]))
-            g.add((ESPOL[zona], A, BRICK["Zone"]))
+        g.add((ESPOL[zona], A, REC["Zone"]))
         # 2) Enlazar la zona al espacio correcto
-        target = "ESPOL" if zona in ["JardinFrontal", "JardinTrasero"] else "LabIoT"
+        target = "11C-Piso1" if zona in ["JardinFrontal", "JardinTrasero"] else "LabIoT"
         g.add((ESPOL[target], REC.hasPart, ESPOL[zona]))
         g.add((ESPOL[zona], REC.isPartOf, ESPOL[target]))
 
@@ -645,7 +633,6 @@ def crear_zonas_sensores_LabSistemasNube():
     for zona, sensores in zonas_Sensores_LabSitemasNube.items():
         # 1) Crear la zona
         g.add((ESPOL[zona], A, REC["Zone"]))
-        g.add((ESPOL[zona], A, BRICK["Zone"]))
         # 2) Enlazar la zona al laboratorio Sistemas en la Nube
         g.add((ESPOL["LabSistemasEnLaNube"], REC.hasPart, ESPOL[zona]))
         g.add((ESPOL[zona], REC.isPartOf, ESPOL["LabSistemasEnLaNube"]))
@@ -676,7 +663,6 @@ def crear_zonas_sensores_LabRedesDatos():
     for zona, sensores in zonas_sensores_RedesDatos.items():
         # 1) Crear la zona
         g.add((ESPOL[zona], A, REC.Zone))
-        g.add((ESPOL[zona], A, BRICK["Zone"]))
         # 2) Enlazar la zona al laboratorio Redes de Datos
         g.add((ESPOL["LabRedesDeDatos"], REC.hasPart, ESPOL[zona]))
         g.add((ESPOL[zona], REC.isPartOf, ESPOL["LabRedesDeDatos"]))

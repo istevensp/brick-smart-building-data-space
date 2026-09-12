@@ -1,0 +1,11 @@
+endpoint: http://localhost:3030/brickESPOL/sparql
+laboratory: espol:LabRedesDeDatos
+30 trials per query, 20 timed queries each
+
+query                                          rows    median          IQR
+----------------------------------------------------------------------------
+scenario: one laboratory, via rec:isPartOf        3      5.6   4.6-5.9
+same query, whole building                       14      5.0   4.6-5.3
+
+The spatial restriction narrows 14 rows to 3 and changes the median by +0.6 ms.
+milliseconds, including the HTTP round trip.

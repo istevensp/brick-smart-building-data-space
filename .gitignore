@@ -7,3 +7,5 @@
 # Django Caches
 __pycache__/
 .py[cod]
+# Fuseki dataset configs left behind by the evaluation scripts
+Services/fuseki/system_files/

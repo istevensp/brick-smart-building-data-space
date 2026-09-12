@@ -1,0 +1,22 @@
+QUDT vocabulary resolved into the data graph
+graph under test : 97654 triples
+shapes from Brick: 254 node shapes
+
+conforms  : False
+violations: 78
+
+property                      total  on espol: nodes
+------------------------------------------------------
+hasLocation                      37               37
+(no path)                        32                0
+hasQUDTReference                  5                0
+isPartOf                          2                2
+hasPart                           2                2
+
+messages
+    37  Value does not have class qudt:QuantityKind
+    37  Value does not have class brick:Location
+     2  Value does not have class rec:Space
+     2  Value does not have class rec:Organization
+
+violations involving the custom properties: none

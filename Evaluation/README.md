@@ -14,16 +14,37 @@ trust.
 | `04_readings_in_graph.py` | The architecture against the alternative of storing readings in the graph | Yes |
 | `05_reasoner_cost.py` | The cost of the RDFS reasoner the deployment enables | Yes |
 | `06_brick_validation.py` | Whether the graph validates against the SHACL shapes Brick ships with | No |
+| `07_scalability_repeated.py` | `03` over 100 trials, reporting medians and interquartile ranges | Yes |
+| `08_query_latency_repeated.py` | `02` over 100 trials | Yes |
+| `09_readings_in_graph_repeated.py` | `04` over 100 trials | Yes |
+| `10_crossvalidation.py` | Whether the location violations are an artefact of an incomplete import closure, by validating four configurations and comparing them | No |
+| `13_scenario_query.py` | The query the end-to-end scenario describes, restricted to one laboratory through the REC hierarchy | Yes |
+| `12_defects_by_family.py` | Link coverage and unit defects split by device family, over the released model and the pre-repair backup | No |
+| `11_reasoner_cost_repeated.py` | `05` over 20 trials, reporting the distribution of the factor rather than one value | Yes |
 
-`01` and `06` read `Ontology/brickESPOLschema.ttl` directly, so they run
+`01`, `06`, `10` and `12` read `Ontology/brickESPOLschema.ttl` directly, so they run
 anywhere the repository is checked out.
+
+`07`, `08`, `09` and `11` supersede `02`, `03`, `04` and `05` for every timing
+figure in the paper: a single invocation of the same measurement is not reproducible, and the
+ratio that was going to be printed came out as 6.4, 4.4, 6.1 and 7.4 depending
+on the run. The single-pass scripts are kept because they are quicker to read.
+
+`10` is the one that supports the Brick 1.4.4 finding. Reporting violations from
+one configuration would establish nothing on its own: an unresolved import can
+manufacture violations, as happened in this work with QUDT, where 183 of them
+turned out to be noise. The script validates the released model against Brick
+alone, against Brick with QUDT resolved, against both plus the official
+`Brick-REC-alignment.ttl`, and against a variant whose spaces also carry the
+deprecated Brick classes. That variant is derived from the vocabulary itself, by
+reading `brick:isReplacedBy` backwards, rather than written by hand.
 
 ## Running them
 
 ```bash
 pip install -r Evaluation/requirements.txt
 
-# Scripts 02 to 05 need the endpoint. Never hard-code the password.
+# Scripts 02 to 05, 07 to 09 and 11 need the endpoint. Never hard-code the password.
 export FUSEKI_BASE=http://localhost:3030
 export FUSEKI_SPARQL_ENDPOINT=http://localhost:3030/brickESPOL/sparql
 export FUSEKI_USER=admin
@@ -31,10 +52,20 @@ export FUSEKI_PASSWORD=...
 
 python Evaluation/01_graph_audit.py
 python Evaluation/02_query_latency.py
+
+# No endpoint needed for these three
+python Evaluation/06_brick_validation.py
+python Evaluation/10_crossvalidation.py
 ```
 
-Scripts `03`, `04` and `05` create temporary in-memory datasets through the
-Fuseki admin API and delete them when they finish. **They never write to the
+`10` needs `Ontology/Brick-REC-alignment.ttl`, which is the official alignment
+published by the Brick project at `alignments/rec/` in its repository. It is
+vendored here, like `Brick.ttl` and `QUDT-units.ttl`, so that the comparison is
+reproducible offline and against a fixed version rather than whatever the URL
+serves later.
+
+Scripts `03`, `04`, `05`, `07`, `09` and `11` create temporary in-memory
+datasets through the Fuseki admin API and delete them when they finish. **They never write to the
 deployed `brickESPOL` dataset.**
 
 ## Reading the results honestly

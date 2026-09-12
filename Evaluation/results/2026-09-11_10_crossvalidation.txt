@@ -1,0 +1,23 @@
+model            : 55219 triples
+shapes           : Brick.ttl, 53960 triples
+alignment        : 130 triples, 15 owl:equivalentClass
+deprecated variant: +91 type triples on 35 entities
+local namespace  : https://www.espol.edu.ec/ESPOL#
+
+configuration                                    total on espol       time
+--------------------------------------------------------------------------
+released model, Brick shapes alone                 261      224      14.4s
+released model, Brick + QUDT                        78       41      18.2s
+released model, Brick + QUDT + REC alignment        78       41      18.2s
+deprecated-typed variant, Brick + QUDT              43        6      18.5s
+
+Breakdown on espol: nodes, by property
+configuration                                  paths
+--------------------------------------------------------------------------
+released model, Brick shapes alone             hasUnit 183, hasLocation 37, isPartOf 2, hasPart 2
+released model, Brick + QUDT                   hasLocation 37, isPartOf 2, hasPart 2
+released model, Brick + QUDT + REC alignment   hasLocation 37, isPartOf 2, hasPart 2
+deprecated-typed variant, Brick + QUDT         isPartOf 4, hasPart 2
+
+The official alignment changes the count on espol: nodes by +0.
+Typing the spaces with the deprecated classes changes it by -35.

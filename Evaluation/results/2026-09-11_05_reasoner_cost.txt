@@ -1,0 +1,20 @@
+query                            points     no RDFS   with RDFS   factor
+--------------------------------------------------------------------------
+hierarchy (rec:isPartOf)            214      7.9 ms      4.1 ms     0.5x
+relations (brick:isPointOf)         214      6.5 ms      5.8 ms     0.9x
+instances of a class                214      4.7 ms      5.2 ms     1.1x
+metadata and handle (Q1)            214      8.3 ms     10.8 ms     1.3x
+   reasoner check: 55218 visible triples without, 73625 with
+--------------------------------------------------------------------------
+hierarchy (rec:isPartOf)            856      4.1 ms      4.4 ms     1.1x
+relations (brick:isPointOf)         856      8.4 ms      9.3 ms     1.1x
+instances of a class                856      5.1 ms      4.5 ms     0.9x
+metadata and handle (Q1)            856     18.3 ms     29.0 ms     1.6x
+   reasoner check: 58989 visible triples without, 81113 with
+--------------------------------------------------------------------------
+hierarchy (rec:isPartOf)           3424      6.3 ms      5.7 ms     0.9x
+relations (brick:isPointOf)        3424     24.4 ms     24.2 ms     1.0x
+instances of a class               3424      4.2 ms      4.4 ms     1.1x
+metadata and handle (Q1)           3424     49.2 ms    104.1 ms     2.1x
+   reasoner check: 74073 visible triples without, 111065 with
+--------------------------------------------------------------------------

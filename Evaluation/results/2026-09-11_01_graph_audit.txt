@@ -1,0 +1,49 @@
+==============================================================
+GRAPH COMPOSITION
+==============================================================
+triples in file (vocabularies + instances) :  55219
+entities in the espol: namespace           :    280
+triples with an espol: subject             :   1257
+share of the file that is instance data    :   2.3 %
+
+Entities by class
+   brick:Equipment                      37
+   brick:Active_Power_Sensor            31
+   brick:Current_Sensor                 31
+   brick:Power_Factor_Sensor            31
+   brick:Voltage_Sensor                 31
+   brick:Power_Sensor                   22
+   brick:Reactive_Power_Sensor          22
+   brick:Humidity_Sensor                14
+   brick:Temperature_Sensor             14
+   rec:Zone                             13
+   brick:Energy_Sensor                   9
+   brick:CO2_Sensor                      5
+   rec:Laboratory                        3
+   rec:Level                             2
+   rec:OutdoorSpace                      2
+   rec:PostalAddress                     2
+   brick:Pressure_Sensor                 1
+   brick:Rain_Level_Sensor               1
+   brick:Wind_Direction_Sensor           1
+   brick:Wind_Speed_Sensor               1
+   rec:Building                          1
+   rec:Campus                            1
+   rec:Department                        1
+   rec:Organization                      1
+   total typed                         277
+
+==============================================================
+COVERAGE OF THE LINK TO THE OPERATIONAL STORE
+==============================================================
+equipment carrying espol:db_id      :  37 /  37
+points carrying espol:point_type    : 214 / 214
+points carrying espol:db_id         :   0 / 214   (the join is anchored at the equipment)
+triples per measurement point       :   5.9
+
+==============================================================
+DEFECTS
+==============================================================
+unit IRIs in use                    :  12 distinct
+   no case-mismatched unit IRIs found
+entities without rdf:type           :   0

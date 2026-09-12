@@ -1,0 +1,11 @@
+endpoint: http://localhost:3030/brickESPOL/sparql
+100 trials per query, 40 timed queries each
+
+query                                          rows    median        Q1        Q3       min       max
+------------------------------------------------------------------------------------------------------
+Q1  all sensors with equipment and handle       214      11.5      10.9      12.4      10.1      24.4
+Q2  one point, full metadata                      1       4.3       3.9       4.8       3.3      10.0
+Q3  temperature sensors and their handles        14       4.2       4.0       4.4       3.5       5.2
+
+milliseconds, including the HTTP round trip.
+total elapsed: 167.5 s

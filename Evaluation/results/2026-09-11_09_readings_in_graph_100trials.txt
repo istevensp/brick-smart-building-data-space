@@ -1,0 +1,11 @@
+measurement points: 214, 100 trials each
+
+store                         triples       MB    median        Q1        Q3       min       max
+------------------------------------------------------------------------------------------------
+structure only                  55219      7.9       6.7       6.5       7.0       6.1      19.3
++ 10 readings/point             63779      9.2       6.8       6.5       7.1       6.0      24.2
++ 100 readings/point           140819     21.4       7.1       6.9       7.4       6.2      15.8
++ 500 readings/point           483219     76.1       7.3       7.1       7.9       6.3      17.3
+
+milliseconds. 500 readings per point is about 8.3 hours at one per minute.
+total elapsed: 756.2 s

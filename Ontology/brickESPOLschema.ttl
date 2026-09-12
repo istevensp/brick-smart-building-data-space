@@ -32657,8 +32657,7 @@ espol:EM-LIoTST_VelViento a brick:Wind_Speed_Sensor ;
     brick:isPointOf espol:EM-LIoTST ;
     espol:point_type "velocity" .
 
-espol:JardinTrasero a brick:Outdoor_Area,
-        rec:OutdoorSpace ;
+espol:JardinTrasero a rec:OutdoorSpace ;
     rec:isPartOf espol:ESPOL ;
     rec:ownedBy espol:FIEC .
 
@@ -38620,6 +38619,28 @@ brick:Shading_Equipment a owl:Class,
     brick:hasAssociatedTag tag:Equipment,
         tag:Shade .
 
+brick:Site a owl:Class,
+        sh:NodeShape ;
+    rdfs:label "Site"@en ;
+    rdfs:subClassOf brick:Location ;
+    owl:deprecated true ;
+    skos:definition "A geographic region containing 0 or more buildings. Typically used as the encapsulating location for a collection of Brick entities through the hasPart/isPartOf relationships"@en ;
+    sh:property [ sh:or ( [ sh:class brick:Building ] [ sh:class brick:Region ] [ sh:class brick:Site ] [ sh:class brick:Space ] [ sh:class brick:Room ] ) ;
+            sh:path brick:hasPart ] ;
+    sh:rule [ a sh:TripleRule ;
+            sh:object tag:Location ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            sh:object tag:Site ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ] ;
+    brick:deprecatedInVersion "1.4.0" ;
+    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:Site" ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Site ;
+    brick:isReplacedBy rec:Site .
+
 brick:Smoke_Detection_Alarm a owl:Class,
         sh:NodeShape ;
     rdfs:label "Smoke Detection Alarm"@en ;
@@ -41445,16 +41466,14 @@ rec:standard a owl:DatatypeProperty ;
 rec:wifiSignalStrength a owl:DatatypeProperty ;
     rdfs:label "wifiSignalStrength"@en .
 
-espol:11C-Piso1 a brick:Floor,
-        rec:Level ;
+espol:11C-Piso1 a rec:Level ;
     brick:hasTag tag:Floor ;
     rec:hasPart espol:LabIoT ;
     rec:isPartOf espol:11C ;
     rec:levelNumber 1 ;
     rec:ownedBy espol:FIEC .
 
-espol:JardinFrontal a brick:Outdoor_Area,
-        rec:OutdoorSpace ;
+espol:JardinFrontal a rec:OutdoorSpace ;
     rec:isPartOf espol:ESPOL ;
     rec:ownedBy espol:FIEC .
 
@@ -41506,12 +41525,10 @@ espol:S5IoT a brick:Equipment ;
         espol:S5IoT_Temperatura ;
     espol:db_id "11C-LabIoT:airClimate5" .
 
-espol:ZonaGrupo1 a brick:Zone,
-        rec:Zone ;
+espol:ZonaGrupo1 a rec:Zone ;
     rec:isPartOf espol:LabRedesDeDatos .
 
-espol:ZonaVentana2 a brick:Zone,
-        rec:Zone ;
+espol:ZonaVentana2 a rec:Zone ;
     rec:isPartOf espol:LabSistemasEnLaNube .
 
 brick:Air_Diffuser a owl:Class,
@@ -41677,6 +41694,32 @@ brick:Booster_Pump a owl:Class,
     brick:hasAssociatedTag tag:Booster,
         tag:Equipment,
         tag:Pump .
+
+brick:Building a owl:Class,
+        sh:NodeShape ;
+    rdfs:label "Building"@en ;
+    rdfs:subClassOf brick:Location ;
+    owl:deprecated true ;
+    skos:definition "An independent unit of the built environment with a characteristic spatial structure, intended to serve at least one function or user activity [ISO 12006-2:2013]"@en ;
+    sh:property [ sh:or ( [ sh:class brick:Floor ] [ sh:class brick:Room ] [ sh:class brick:Space ] [ sh:class brick:Zone ] [ sh:class brick:Wing ] ) ;
+            sh:path brick:hasPart ],
+        bsh:hasAddressShape,
+        bsh:hasbuildingPrimaryFunctionShape,
+        bsh:hasbuildingThermalTransmittanceShape,
+        bsh:hasyearBuiltShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:object tag:Building ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            sh:object tag:Location ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ] ;
+    brick:deprecatedInVersion "1.4.0" ;
+    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:Building" ;
+    brick:hasAssociatedTag tag:Building,
+        tag:Location ;
+    brick:isReplacedBy rec:Building .
 
 brick:Bypass_Air a brick:Substance ;
     rdfs:label "Bypass Air"@en ;
@@ -43075,28 +43118,6 @@ brick:Service_Room a owl:Class,
         tag:Space ;
     brick:isReplacedBy rec:UtilitiesRoom .
 
-brick:Site a owl:Class,
-        sh:NodeShape ;
-    rdfs:label "Site"@en ;
-    rdfs:subClassOf brick:Location ;
-    owl:deprecated true ;
-    skos:definition "A geographic region containing 0 or more buildings. Typically used as the encapsulating location for a collection of Brick entities through the hasPart/isPartOf relationships"@en ;
-    sh:property [ sh:or ( [ sh:class brick:Building ] [ sh:class brick:Region ] [ sh:class brick:Site ] [ sh:class brick:Space ] [ sh:class brick:Room ] ) ;
-            sh:path brick:hasPart ] ;
-    sh:rule [ a sh:TripleRule ;
-            sh:object tag:Location ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            sh:object tag:Site ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ] ;
-    brick:deprecatedInVersion "1.4.0" ;
-    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:Site" ;
-    brick:hasAssociatedTag tag:Location,
-        tag:Site ;
-    brick:isReplacedBy rec:Site .
-
 brick:Speed_Sensor a owl:Class,
         sh:NodeShape ;
     rdfs:label "Speed Sensor"@en ;
@@ -43629,8 +43650,7 @@ rec:locatedIn a owl:AsymmetricProperty,
         owl:ObjectProperty ;
     rdfs:label "locatedIn"@en .
 
-espol:11C-Piso2 a brick:Floor,
-        rec:Level ;
+espol:11C-Piso2 a rec:Level ;
     brick:hasTag tag:Floor ;
     rec:hasPart espol:LabRedesDeDatos,
         espol:LabSistemasEnLaNube ;
@@ -43638,8 +43658,7 @@ espol:11C-Piso2 a brick:Floor,
     rec:levelNumber 2 ;
     rec:ownedBy espol:FIEC .
 
-espol:ESPOL a brick:Site,
-        rec:Campus,
+espol:ESPOL a rec:Campus,
         rec:Organization ;
     rdfs:label "Escuela Superior Politécnica del Litoral" ;
     rec:hasPart espol:FIEC,
@@ -43647,39 +43666,31 @@ espol:ESPOL a brick:Site,
         espol:JardinTrasero ;
     rec:includes espol:11C .
 
-espol:LabRedesDeDatos a brick:Laboratory,
-        rec:Laboratory ;
+espol:LabRedesDeDatos a rec:Laboratory ;
     rec:hasPart espol:ZonaGrupo1,
         espol:ZonaGrupo_2_4 ;
     rec:isPartOf espol:11C-Piso2 ;
     rec:ownedBy espol:FIEC .
 
-espol:ZonaAire a brick:Zone,
-        rec:Zone ;
+espol:ZonaAire a rec:Zone ;
     rec:isPartOf espol:LabSistemasEnLaNube .
 
-espol:ZonaBaño a brick:Zone,
-        rec:Zone ;
+espol:ZonaBaño a rec:Zone ;
     rec:isPartOf espol:LabIoT .
 
-espol:ZonaBreakers a brick:Zone,
-        rec:Zone ;
+espol:ZonaBreakers a rec:Zone ;
     rec:isPartOf espol:LabSistemasEnLaNube .
 
-espol:ZonaEntrada a brick:Zone,
-        rec:Zone ;
+espol:ZonaEntrada a rec:Zone ;
     rec:isPartOf espol:LabIoT .
 
-espol:ZonaGrupo_2_4 a brick:Zone,
-        rec:Zone ;
+espol:ZonaGrupo_2_4 a rec:Zone ;
     rec:isPartOf espol:LabRedesDeDatos .
 
-espol:ZonaOficinaRacks a brick:Zone,
-        rec:Zone ;
+espol:ZonaOficinaRacks a rec:Zone ;
     rec:isPartOf espol:LabSistemasEnLaNube .
 
-espol:ZonaVentana1 a brick:Zone,
-        rec:Zone ;
+espol:ZonaVentana1 a rec:Zone ;
     rec:isPartOf espol:LabSistemasEnLaNube .
 
 espol:airQuality1 a brick:Equipment ;
@@ -43810,32 +43821,6 @@ brick:Air_Temperature_Integral_Time_Parameter a owl:Class,
         tag:Point,
         tag:Temperature,
         tag:Time .
-
-brick:Building a owl:Class,
-        sh:NodeShape ;
-    rdfs:label "Building"@en ;
-    rdfs:subClassOf brick:Location ;
-    owl:deprecated true ;
-    skos:definition "An independent unit of the built environment with a characteristic spatial structure, intended to serve at least one function or user activity [ISO 12006-2:2013]"@en ;
-    sh:property [ sh:or ( [ sh:class brick:Floor ] [ sh:class brick:Room ] [ sh:class brick:Space ] [ sh:class brick:Zone ] [ sh:class brick:Wing ] ) ;
-            sh:path brick:hasPart ],
-        bsh:hasAddressShape,
-        bsh:hasbuildingPrimaryFunctionShape,
-        bsh:hasbuildingThermalTransmittanceShape,
-        bsh:hasyearBuiltShape ;
-    sh:rule [ a sh:TripleRule ;
-            sh:object tag:Building ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            sh:object tag:Location ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ] ;
-    brick:deprecatedInVersion "1.4.0" ;
-    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:Building" ;
-    brick:hasAssociatedTag tag:Building,
-        tag:Location ;
-    brick:isReplacedBy rec:Building .
 
 brick:Building_Air a brick:Substance ;
     rdfs:label "Building Air"@en ;
@@ -44267,6 +44252,31 @@ brick:Hot_Water_System a owl:Class,
         tag:System,
         tag:Water .
 
+brick:Laboratory a owl:Class,
+        sh:NodeShape ;
+    rdfs:label "Laboratory"@en ;
+    rdfs:subClassOf brick:Room ;
+    owl:deprecated true ;
+    skos:definition "facility acceptable to the local, national, or international recognized authority having jurisdiction and which provides uniform testing and examination procedures and standards for meeting design, manufacturing, and factory testing requirements."@en ;
+    sh:rule [ a sh:TripleRule ;
+            sh:object tag:Laboratory ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            sh:object tag:Location ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            sh:object tag:Room ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ] ;
+    brick:deprecatedInVersion "1.4.0" ;
+    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:Laboratory" ;
+    brick:hasAssociatedTag tag:Laboratory,
+        tag:Location,
+        tag:Room ;
+    brick:isReplacedBy rec:Laboratory .
+
 brick:Leaving_Water_Flow_Setpoint a owl:Class,
         sh:NodeShape ;
     rdfs:label "Leaving Water Flow Setpoint"@en ;
@@ -44351,6 +44361,31 @@ brick:Lighting_Equipment a owl:Class,
             sh:subject sh:this ] ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Lighting .
+
+brick:Outdoor_Area a owl:Class,
+        sh:NodeShape ;
+    rdfs:label "Outdoor Area"@en ;
+    rdfs:subClassOf brick:Location ;
+    owl:deprecated true ;
+    skos:definition "A class of spaces that exist outside of a building"@en ;
+    sh:rule [ a sh:TripleRule ;
+            sh:object tag:Area ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            sh:object tag:Location ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            sh:object tag:Outdoor ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ] ;
+    brick:deprecatedInVersion "1.4.0" ;
+    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:OutdoorSpace" ;
+    brick:hasAssociatedTag tag:Area,
+        tag:Location,
+        tag:Outdoor ;
+    brick:isReplacedBy rec:OutdoorSpace .
 
 brick:PID_Parameter a owl:Class,
         sh:NodeShape ;
@@ -45147,15 +45182,13 @@ rec:isPartOf a owl:AsymmetricProperty,
     rdfs:label "isPartOf"@en ;
     rdfs:subPropertyOf brick:isPartOf .
 
-espol:11C a brick:Building,
-        rec:Building ;
+espol:11C a rec:Building ;
     rec:address espol:fiecPA ;
     rec:hasPart espol:11C-Piso1,
         espol:11C-Piso2 ;
     rec:ownedBy espol:FIEC .
 
-espol:ZonaOficina a brick:Zone,
-        rec:Zone ;
+espol:ZonaOficina a rec:Zone ;
     rec:isPartOf espol:LabIoT .
 
 brick:Air_Differential_Pressure_Sensor a owl:Class,
@@ -45924,8 +45957,7 @@ brick:isPartOf a owl:AsymmetricProperty,
     rdfs:label "Is part of"@en ;
     owl:inverseOf brick:hasPart .
 
-espol:ZonaLavadero a brick:Zone,
-        rec:Zone ;
+espol:ZonaLavadero a rec:Zone ;
     rec:isPartOf espol:LabIoT .
 
 brick:Air_Flow_Setpoint a owl:Class,
@@ -46600,31 +46632,6 @@ brick:On_Off_Command a owl:Class,
         tag:On,
         tag:Point .
 
-brick:Outdoor_Area a owl:Class,
-        sh:NodeShape ;
-    rdfs:label "Outdoor Area"@en ;
-    rdfs:subClassOf brick:Location ;
-    owl:deprecated true ;
-    skos:definition "A class of spaces that exist outside of a building"@en ;
-    sh:rule [ a sh:TripleRule ;
-            sh:object tag:Area ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            sh:object tag:Location ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            sh:object tag:Outdoor ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ] ;
-    brick:deprecatedInVersion "1.4.0" ;
-    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:OutdoorSpace" ;
-    brick:hasAssociatedTag tag:Area,
-        tag:Location,
-        tag:Outdoor ;
-    brick:isReplacedBy rec:OutdoorSpace .
-
 brick:Start_Stop_Status a owl:Class,
         sh:NodeShape ;
     rdfs:label "Start Stop Status"@en ;
@@ -47054,6 +47061,28 @@ brick:Water_Valve a owl:Class,
         tag:Valve,
         tag:Water .
 
+brick:Zone a owl:Class,
+        sh:NodeShape ;
+    rdfs:label "Zone"@en ;
+    rdfs:subClassOf brick:Location ;
+    owl:deprecated true ;
+    skos:definition "(1) a separately controlled heated or cooled space. (2) one occupied space or several occupied spaces with similar occupancy category, occupant density, zone air distribution effectiveness, and zone primary airflow per unit area. (3) space or group of spaces within a building for which the heating, cooling, or lighting requirements are sufficiently similar that desired conditions can be maintained throughout by a single controlling device."@en ;
+    sh:property [ sh:or ( [ sh:class brick:Space ] [ sh:class brick:Wing ] [ sh:class brick:Outdoor_Area ] [ sh:class brick:Floor ] ) ;
+            sh:path brick:hasPart ] ;
+    sh:rule [ a sh:TripleRule ;
+            sh:object tag:Location ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            sh:object tag:Zone ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ] ;
+    brick:deprecatedInVersion "1.4.0" ;
+    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:Zone" ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Zone ;
+    brick:isReplacedBy rec:Zone .
+
 brick:timestamp a rdf:Property,
         owl:DatatypeProperty,
         brick:Relationship ;
@@ -47229,8 +47258,7 @@ espol:EM-LIoTST a brick:Equipment ;
         espol:EM-LIoTST_VelViento ;
     espol:db_id "11C-LabIoT:EST_MET" .
 
-espol:LabSistemasEnLaNube a brick:Laboratory,
-        rec:Laboratory ;
+espol:LabSistemasEnLaNube a rec:Laboratory ;
     rec:hasPart espol:ZonaAire,
         espol:ZonaBreakers,
         espol:ZonaOficinaRacks,
@@ -47239,8 +47267,7 @@ espol:LabSistemasEnLaNube a brick:Laboratory,
     rec:isPartOf espol:11C-Piso2 ;
     rec:ownedBy espol:FIEC .
 
-espol:ZonaMesones a brick:Zone,
-        rec:Zone ;
+espol:ZonaMesones a rec:Zone ;
     rec:isPartOf espol:LabIoT .
 
 espol:s31_01 a brick:Equipment ;
@@ -47499,6 +47526,34 @@ brick:Fan_Coil_Unit a owl:Class,
         tag:Fan,
         tag:Unit .
 
+brick:Floor a owl:Class,
+        sh:NodeShape ;
+    rdfs:label "Floor"@en ;
+    rdfs:subClassOf brick:Location ;
+    owl:deprecated true ;
+    owl:equivalentClass brick:Storey ;
+    skos:definition "A level, typically representing a horizontal aggregation of spaces that are vertically bound. (referring to IFC)"@en ;
+    sh:property [ sh:or ( [ sh:class brick:Room ] [ sh:class brick:Space ] [ sh:class brick:Zone ] ) ;
+            sh:path brick:hasPart ] ;
+    sh:rule [ a sh:TripleRule ;
+            sh:object tag:Floor ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            sh:object tag:Location ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ],
+        [ a sh:TripleRule ;
+            sh:object tag:Storey ;
+            sh:predicate brick:hasTag ;
+            sh:subject sh:this ] ;
+    brick:deprecatedInVersion "1.4.0" ;
+    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:Level" ;
+    brick:hasAssociatedTag tag:Floor,
+        tag:Location,
+        tag:Storey ;
+    brick:isReplacedBy rec:Level .
+
 brick:Heating_Ventilation_Air_Conditioning_System a owl:Class,
         sh:NodeShape ;
     rdfs:label "Heating Ventilation Air Conditioning System"@en ;
@@ -47535,31 +47590,6 @@ brick:Heating_Ventilation_Air_Conditioning_System a owl:Class,
         tag:Heat,
         tag:System,
         tag:Ventilation .
-
-brick:Laboratory a owl:Class,
-        sh:NodeShape ;
-    rdfs:label "Laboratory"@en ;
-    rdfs:subClassOf brick:Room ;
-    owl:deprecated true ;
-    skos:definition "facility acceptable to the local, national, or international recognized authority having jurisdiction and which provides uniform testing and examination procedures and standards for meeting design, manufacturing, and factory testing requirements."@en ;
-    sh:rule [ a sh:TripleRule ;
-            sh:object tag:Laboratory ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            sh:object tag:Location ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            sh:object tag:Room ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ] ;
-    brick:deprecatedInVersion "1.4.0" ;
-    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:Laboratory" ;
-    brick:hasAssociatedTag tag:Laboratory,
-        tag:Location,
-        tag:Room ;
-    brick:isReplacedBy rec:Laboratory .
 
 brick:Leaving_Chilled_Water a brick:Substance ;
     rdfs:label "Leaving Chilled Water"@en ;
@@ -47761,8 +47791,7 @@ ref:hasExternalReference a owl:ObjectProperty ;
     rdfs:subPropertyOf s223:hasExternalReference ;
     skos:definition "Points to the external reference for this entity, which contains additional metadata/data not included in this graph." .
 
-espol:LabIoT a brick:Laboratory,
-        rec:Laboratory ;
+espol:LabIoT a rec:Laboratory ;
     rec:hasPart espol:ZonaBaño,
         espol:ZonaEntrada,
         espol:ZonaLavadero,
@@ -48146,34 +48175,6 @@ brick:Effective_Air_Temperature_Setpoint a owl:Class,
     brick:hasQuantity qudtqk:Temperature ;
     brick:hasSubstance brick:Air .
 
-brick:Floor a owl:Class,
-        sh:NodeShape ;
-    rdfs:label "Floor"@en ;
-    rdfs:subClassOf brick:Location ;
-    owl:deprecated true ;
-    owl:equivalentClass brick:Storey ;
-    skos:definition "A level, typically representing a horizontal aggregation of spaces that are vertically bound. (referring to IFC)"@en ;
-    sh:property [ sh:or ( [ sh:class brick:Room ] [ sh:class brick:Space ] [ sh:class brick:Zone ] ) ;
-            sh:path brick:hasPart ] ;
-    sh:rule [ a sh:TripleRule ;
-            sh:object tag:Floor ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            sh:object tag:Location ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            sh:object tag:Storey ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ] ;
-    brick:deprecatedInVersion "1.4.0" ;
-    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:Level" ;
-    brick:hasAssociatedTag tag:Floor,
-        tag:Location,
-        tag:Storey ;
-    brick:isReplacedBy rec:Level .
-
 brick:Heating_Temperature_Setpoint a owl:Class,
         sh:NodeShape ;
     rdfs:label "Heating Temperature Setpoint"@en ;
@@ -48395,8 +48396,7 @@ espol:FIEC a rec:Department ;
     rec:logo "https://www.fiec.espol.edu.ec/sites/fiec.espol.edu.ec/files/logoFIEC2022.jpg"^^xsd:anyURI ;
     rec:owns espol:11C .
 
-espol:ZonaPaneles a brick:Zone,
-        rec:Zone ;
+espol:ZonaPaneles a rec:Zone ;
     rec:isPartOf espol:LabIoT .
 
 brick:Air_Quality_Sensor a owl:Class,
@@ -49374,28 +49374,6 @@ brick:Supply_Air a brick:Substance ;
     owl:sameAs brick:Discharge_Air ;
     skos:broader brick:Air ;
     skos:definition "(1) air delivered by mechanical or natural ventilation to a space, composed of any combination of outdoor air, recirculated air, or transfer air. (2) air entering a space from an air-conditioning, heating, or ventilating apparatus for the purpose of comfort conditioning. Supply air is generally filtered, fan forced, and either heated, cooled, humidified, or dehumidified as necessary to maintain specified conditions. Only the quantity of outdoor air within the supply airflow may be used as replacement air."@en .
-
-brick:Zone a owl:Class,
-        sh:NodeShape ;
-    rdfs:label "Zone"@en ;
-    rdfs:subClassOf brick:Location ;
-    owl:deprecated true ;
-    skos:definition "(1) a separately controlled heated or cooled space. (2) one occupied space or several occupied spaces with similar occupancy category, occupant density, zone air distribution effectiveness, and zone primary airflow per unit area. (3) space or group of spaces within a building for which the heating, cooling, or lighting requirements are sufficiently similar that desired conditions can be maintained throughout by a single controlling device."@en ;
-    sh:property [ sh:or ( [ sh:class brick:Space ] [ sh:class brick:Wing ] [ sh:class brick:Outdoor_Area ] [ sh:class brick:Floor ] ) ;
-            sh:path brick:hasPart ] ;
-    sh:rule [ a sh:TripleRule ;
-            sh:object tag:Location ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ],
-        [ a sh:TripleRule ;
-            sh:object tag:Zone ;
-            sh:predicate brick:hasTag ;
-            sh:subject sh:this ] ;
-    brick:deprecatedInVersion "1.4.0" ;
-    brick:deprecationMitigationMessage "Brick location classes are being phased out in favor of RealEstateCore classes. For a replacement, consider rec:Zone" ;
-    brick:hasAssociatedTag tag:Location,
-        tag:Zone ;
-    brick:isReplacedBy rec:Zone .
 
 brick:hasPart a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,

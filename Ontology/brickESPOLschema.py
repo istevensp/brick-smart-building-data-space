@@ -80,7 +80,6 @@ g.add((ESPOL["fiecPA"], REC.postalCode, Literal("EC090112")))
 
 # Nodo 1: ESPOL - Campus, Organization (Collection, Agent)
 g.add((ESPOL["ESPOL"], A, REC["Campus"]))
-g.add((ESPOL["ESPOL"], A, BRICK["Site"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["ESPOL"], A, REC["Organization"]))
 g.add((ESPOL["ESPOL"], REC.hasPart, ESPOL["FIEC"])) # Organization Property to domain(Department)
 g.add((ESPOL["ESPOL"], RDFS.label, Literal("Escuela Superior Politécnica del Litoral")))
@@ -94,7 +93,6 @@ g.add((ESPOL["FIEC"], REC.owns, ESPOL["11C"])) # Department property to domain(R
 
 # Nodo 3: Edificio 11C - Building (Space)
 g.add((ESPOL["11C"], A, REC["Building"]))
-g.add((ESPOL["11C"], A, BRICK["Building"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["11C"], REC.address, ESPOL["fiecPA"])) # Building property
 g.add((ESPOL["11C"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 # g.add((ESPOL["11C"], REC.operator, Literal("Ph. D. Jorge Aragundi Rodríguez")))
@@ -103,9 +101,7 @@ g.add((ESPOL["11C"], REC.hasPart, ESPOL["11C-Piso2"])) # Space property to domai
 
 # Nodo 4: Edificio 11C - Pisos - Level (Space)
 g.add((ESPOL["11C-Piso1"], A, REC["Level"]))
-g.add((ESPOL["11C-Piso1"], A, BRICK["Floor"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["11C-Piso2"], A, REC["Level"]))
-g.add((ESPOL["11C-Piso2"], A, BRICK["Floor"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["11C-Piso1"], REC.levelNumber, Literal(1, datatype=XSD.integer)))  # rec:levelNumber is typed xsd:integer
 g.add((ESPOL["11C-Piso2"], REC.levelNumber, Literal(2, datatype=XSD.integer)))  # rec:levelNumber is typed xsd:integer
 g.add((ESPOL["11C-Piso1"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
@@ -122,7 +118,6 @@ g.add((ESPOL["11C-Piso2"], REC.hasPart, ESPOL["LabSistemasEnLaNube"])) # Space p
 
 # Nodo 5: lab_telematica - Laboratory (Space)
 g.add((ESPOL["LabIoT"], A, REC["Laboratory"]))
-g.add((ESPOL["LabIoT"], A, BRICK["Laboratory"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["LabIoT"], REC.isPartOf, ESPOL["11C-Piso1"])) # Space property to domain(Space)
 g.add((ESPOL["LabIoT"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 # g.add((ESPOL["LabIoT"], BRICK.designer, ESPOL["FIEC"]))
@@ -131,19 +126,16 @@ g.add((ESPOL["LabIoT"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (
 
 # Nodo 6: Jardin frontal - OutdoorSpace
 g.add((ESPOL["JardinFrontal"], A, REC["OutdoorSpace"]))
-g.add((ESPOL["JardinFrontal"], A, BRICK["Outdoor_Area"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["JardinFrontal"], REC.isPartOf, ESPOL["ESPOL"]))  # a garden belongs to the campus, not to a building or a floor
 g.add((ESPOL["JardinFrontal"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 
 # Nodo 7: Jardín Trasero - OutdoorSpace
 g.add((ESPOL["JardinTrasero"], A, REC["OutdoorSpace"]))
-g.add((ESPOL["JardinTrasero"], A, BRICK["Outdoor_Area"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["JardinTrasero"], REC.isPartOf, ESPOL["ESPOL"]))  # a garden belongs to the campus, not to a building or a floor
 g.add((ESPOL["JardinTrasero"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 
 #nodo 8: Lab_RedesDeDatos
 g.add((ESPOL["LabRedesDeDatos"], A, REC["Laboratory"]))
-g.add((ESPOL["LabRedesDeDatos"], A, BRICK["Laboratory"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["LabRedesDeDatos"], REC.isPartOf, ESPOL["11C-Piso2"]))
 g.add((ESPOL["LabRedesDeDatos"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 # g.add((ESPOL["LabRedesDeDatos"], BRICK.designer, ESPOL["FIEC"]))
@@ -152,7 +144,6 @@ g.add((ESPOL["LabRedesDeDatos"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agen
 
 # Nodo 9: Lab_SistemasEnLaNube
 g.add((ESPOL["LabSistemasEnLaNube"], A, REC["Laboratory"]))
-g.add((ESPOL["LabSistemasEnLaNube"], A, BRICK["Laboratory"]))  # brick:hasLocation requires a brick:Location
 g.add((ESPOL["LabSistemasEnLaNube"], REC.isPartOf, ESPOL["11C-Piso2"]))
 g.add((ESPOL["LabSistemasEnLaNube"], REC.ownedBy, ESPOL["FIEC"])) # Owned by an Agent Class (Department)
 # g.add((ESPOL["LabSistemasEnLaNube"], BRICK.designer, ESPOL["FIEC"]))
@@ -613,7 +604,6 @@ def crear_zonas_sensores_LabIoT():
         # Outdoor spaces are typed above and are not zones of the laboratory.
         if zona not in ["JardinFrontal", "JardinTrasero"]:
             g.add((ESPOL[zona], A, REC["Zone"]))
-            g.add((ESPOL[zona], A, BRICK["Zone"]))
         # 2) Enlazar la zona al espacio correcto
         target = "ESPOL" if zona in ["JardinFrontal", "JardinTrasero"] else "LabIoT"
         g.add((ESPOL[target], REC.hasPart, ESPOL[zona]))
@@ -645,7 +635,6 @@ def crear_zonas_sensores_LabSistemasNube():
     for zona, sensores in zonas_Sensores_LabSitemasNube.items():
         # 1) Crear la zona
         g.add((ESPOL[zona], A, REC["Zone"]))
-        g.add((ESPOL[zona], A, BRICK["Zone"]))
         # 2) Enlazar la zona al laboratorio Sistemas en la Nube
         g.add((ESPOL["LabSistemasEnLaNube"], REC.hasPart, ESPOL[zona]))
         g.add((ESPOL[zona], REC.isPartOf, ESPOL["LabSistemasEnLaNube"]))
@@ -676,7 +665,6 @@ def crear_zonas_sensores_LabRedesDatos():
     for zona, sensores in zonas_sensores_RedesDatos.items():
         # 1) Crear la zona
         g.add((ESPOL[zona], A, REC.Zone))
-        g.add((ESPOL[zona], A, BRICK["Zone"]))
         # 2) Enlazar la zona al laboratorio Redes de Datos
         g.add((ESPOL["LabRedesDeDatos"], REC.hasPart, ESPOL[zona]))
         g.add((ESPOL[zona], REC.isPartOf, ESPOL["LabRedesDeDatos"]))

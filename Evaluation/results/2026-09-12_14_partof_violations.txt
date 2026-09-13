@@ -11,9 +11,9 @@ violations on espol: nodes, by property
 
 the ones that are not brick:hasLocation
 --------------------------------------------------------------
-  rec:hasPart    espol:ESPOL            -> espol:JardinTrasero   
-                 Value does not have class rec:Organization (sh:ClassConstraintComponent)
   rec:hasPart    espol:ESPOL            -> espol:JardinFrontal   
+                 Value does not have class rec:Organization (sh:ClassConstraintComponent)
+  rec:hasPart    espol:ESPOL            -> espol:JardinTrasero   
                  Value does not have class rec:Organization (sh:ClassConstraintComponent)
   rec:isPartOf   espol:JardinFrontal    -> espol:ESPOL           
                  Value does not have class rec:Space (sh:ClassConstraintComponent)

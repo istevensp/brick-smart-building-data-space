@@ -1,0 +1,99 @@
+model: 55219 triples
+
+POINTS PER ZONE
+----------------------------------------------------------
+  ZonaPaneles                   8 equipment   80 points
+  ZonaMesones                   5 equipment   20 points
+  ZonaOficina                   3 equipment   18 points
+  ZonaLavadero                  4 equipment   16 points
+  ZonaAire                      2 equipment   12 points
+  ZonaBreakers                  2 equipment   12 points
+  ZonaOficinaRacks              2 equipment   12 points
+  ZonaVentana1                  2 equipment   12 points
+  ZonaBaño                      2 equipment    8 points
+  JardinFrontal                 1 equipment    6 points
+  ZonaEntrada                   2 equipment    6 points
+  ZonaVentana2                  1 equipment    6 points
+  ZonaGrupo_2_4                 2 equipment    4 points
+  ZonaGrupo1                    1 equipment    2 points
+
+  densest : ZonaPaneles, 80 points on 8 devices
+  sparsest: ZonaGrupo1, 2 points on 1 devices
+
+WHAT THE POINTS MEASURE
+----------------------------------------------------------
+  energy                       177
+  indoor environment            31
+  weather station                6
+  TOTAL                        214
+
+ADMINISTRATIVE LAYER (what REC adds beyond spaces)
+----------------------------------------------------------
+  FIEC                     owns                   11C
+  espolPA                  addressLine1           Prosperina, Km 30.5 de la Vía Perimetral
+  espolPA                  city                   Guayaquil
+  espolPA                  country                Ecuador
+  espolPA                  postalCode             EC090112
+  fiecPA                   addressLine1           V24J+4RX
+  fiecPA                   city                   Guayaquil
+  fiecPA                   country                Ecuador
+  fiecPA                   postalCode             EC090112
+  11C-Piso1                levelNumber            1
+  11C-Piso2                levelNumber            2
+  FIEC                     rdf:type               rec:Department
+  TOTAL                    12 triples
+
+MONGODB COLLECTIONS NAMED BY espol:db_id
+----------------------------------------------------------
+  11C-LabIoT                   25 equipment
+  11C-LabRDD                    3 equipment
+  11C-LabSN                     9 equipment
+  distinct collections         3
+
+UNIT IRIs IN USE, BEFORE AND AFTER THE REPAIR
+----------------------------------------------------------
+  before:
+     unit:W                   38
+     unit:A                   31
+     unit:V                   31
+     unit:VA                  22
+     unit:VAR                 22
+     unit:DEG_C               14
+     unit:PERCENT_RH          14
+     unit:PPM                  5
+     unit:w                    2
+     unit:DEG                  1
+     unit:IN-PER-SEC           1
+     unit:M-PER-SEC            1
+     unit:PA                   1
+     TOTAL                   183
+  after:
+     unit:W                   40
+     unit:A                   31
+     unit:V                   31
+     unit:V-A                 22
+     unit:V-A_Reactive        22
+     unit:DEG_C               14
+     unit:PERCENT_RH          14
+     unit:PPM                  5
+     unit:DEG                  1
+     unit:IN-PER-SEC           1
+     unit:M-PER-SEC            1
+     unit:PA                   1
+     TOTAL                   183
+
+  broken identifiers: 46
+     compound, symbol diverges from the QUDT IRI : 44
+     simple, lower-case letter (unit:w for unit:W): 2
+
+DEPRECATED TERMS IN THE BRICK DISTRIBUTION
+----------------------------------------------------------
+  terms carrying owl:deprecated : 246
+  of which the spatial classes this model replaces:
+     brick:Site       deprecated
+     brick:Building   deprecated
+     brick:Floor      deprecated
+     brick:Room       deprecated
+     brick:Zone       deprecated
+     brick:Outdoor_Area deprecated
+     brick:Location   deprecated

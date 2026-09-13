@@ -1,17 +1,16 @@
-"""Explain the four part-of violations the Brick shapes report.
+"""Break down the part-of violations the Brick shapes report.
 
-Script 06 reports 41 violations on espol: nodes: 37 on brick:hasLocation and
-four more on rec:hasPart and rec:isPartOf. The 37 are the Brick/REC conflict the
-paper is about. The other four were described in the paper as failing "for the
-analogous reason", which this script shows is wrong: they are a conflict inside
-REC, and Brick has nothing to do with them.
+Script 06 counts 41 violations on espol: nodes: 37 on brick:hasLocation and four
+more on rec:hasPart and rec:isPartOf. The 37 are the Brick/REC conflict. This
+script shows that the other four have a different cause: they are a conflict
+inside REC, and Brick takes no part in them.
 
 What it prints, for every violation that is not on brick:hasLocation: the focus
 node, the offending value, the constraint that failed and the shape it came
 from, plus the declared types of the entities involved and the position of the
 relevant classes in the REC hierarchy.
 
-Known outcome at the time of writing:
+Outcome on the released model:
 
   - All four involve espol:ESPOL and the two outdoor gardens, and none involves
     espol:FIEC, the department.
@@ -24,7 +23,7 @@ Known outcome at the time of writing:
     rec:OutdoorSpace descends from rec:Space through rec:Architecture.
   - An entity that is both a place and an organization therefore cannot satisfy
     both shapes. Typing the spaces with the deprecated Brick classes does not
-    help: script 10 reports that variant still fails six times on part-of.
+    help: script 10 reports that variant still failing six times on part-of.
 
 The script reads the published ontology files and needs no running deployment.
 
@@ -95,7 +94,7 @@ def main():
         by_path[short(path)] = by_path.get(short(path), 0) + 1
     print("violations on espol: nodes, by property")
     print("-" * 62)
-    for path in sorted(by_path, key=lambda key: -by_path[key]):
+    for path in sorted(by_path, key=lambda key: (-by_path[key], key)):
         print("  %-40s %d" % (path, by_path[path]))
     print("  %-40s %d" % ("TOTAL", len(rows)))
     print()
@@ -103,7 +102,7 @@ def main():
     print("the ones that are not brick:hasLocation")
     print("-" * 62)
     for path, focus, value, component, message in sorted(
-            rows, key=lambda r: (r[0], str(r[1]))):
+            rows, key=lambda r: (r[0], str(r[1]), str(r[2]))):
         if "hasLocation" in path:
             continue
         print("  %-14s %-22s -> %-22s"

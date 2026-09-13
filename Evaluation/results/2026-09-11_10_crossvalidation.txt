@@ -6,17 +6,17 @@ local namespace  : https://www.espol.edu.ec/ESPOL#
 
 configuration                                    total on espol       time
 --------------------------------------------------------------------------
-released model, Brick shapes alone                 261      224      14.4s
-released model, Brick + QUDT                        78       41      18.2s
-released model, Brick + QUDT + REC alignment        78       41      18.2s
-deprecated-typed variant, Brick + QUDT              43        6      18.5s
+released model, Brick shapes alone                 261      224      14.9s
+released model, Brick + QUDT                        78       41      19.3s
+released model, Brick + QUDT + REC alignment        78       41      18.3s
+deprecated-typed variant, Brick + QUDT              43        6      18.2s
 
 Breakdown on espol: nodes, by property
 configuration                                  paths
 --------------------------------------------------------------------------
-released model, Brick shapes alone             hasUnit 183, hasLocation 37, isPartOf 2, hasPart 2
-released model, Brick + QUDT                   hasLocation 37, isPartOf 2, hasPart 2
-released model, Brick + QUDT + REC alignment   hasLocation 37, isPartOf 2, hasPart 2
+released model, Brick shapes alone             hasUnit 183, hasLocation 37, hasPart 2, isPartOf 2
+released model, Brick + QUDT                   hasLocation 37, hasPart 2, isPartOf 2
+released model, Brick + QUDT + REC alignment   hasLocation 37, hasPart 2, isPartOf 2
 deprecated-typed variant, Brick + QUDT         isPartOf 4, hasPart 2
 
 The official alignment changes the count on espol: nodes by +0.

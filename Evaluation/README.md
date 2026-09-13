@@ -21,9 +21,11 @@ trust.
 | `13_scenario_query.py` | The query the end-to-end scenario describes, restricted to one laboratory through the REC hierarchy | Yes |
 | `12_defects_by_family.py` | Link coverage and unit defects split by device family, over the released model and the pre-repair backup | No |
 | `11_reasoner_cost_repeated.py` | `05` over 20 trials, reporting the distribution of the factor rather than one value | Yes |
+| `14_partof_violations.py` | Why the four part-of violations fail. They are internal to REC and have nothing to do with Brick | No |
+| `15_paper_figures.py` | The five figures the text stated that no other script produced: densest and sparsest zone, what the points measure, the administrative layer, the MongoDB collections, and the deprecated terms in the release | No |
 
-`01`, `06`, `10` and `12` read `Ontology/brickESPOLschema.ttl` directly, so they run
-anywhere the repository is checked out.
+`01`, `06`, `10`, `12`, `14` and `15` read the published ontology files
+directly, so they run anywhere the repository is checked out.
 
 `07`, `08`, `09` and `11` supersede `02`, `03`, `04` and `05` for every timing
 figure in the paper: a single invocation of the same measurement is not reproducible, and the

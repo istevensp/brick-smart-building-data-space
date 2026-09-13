@@ -4,7 +4,7 @@ The architecture adds two properties in a local namespace instead of extending
 the Brick schema, so the graph should remain usable with stock Brick tooling.
 This script tests that claim and reports what fails and why.
 
-Known outcome at the time of writing:
+Outcome on the released model:
 
   - 183 violations on brick:hasUnit are an artefact of this setup, not a
     modelling error: the QUDT vocabulary is not imported into the graph, so the
@@ -81,11 +81,13 @@ def main():
 
     print("%-26s %8s %16s" % ("property", "total", "on espol: nodes"))
     print("-" * 54)
-    for key, count in by_path.most_common():
+    for key, count in sorted(by_path.items(),
+                             key=lambda kv: (-kv[1], kv[0])):
         print("%-26s %8d %16d" % (key, count, on_espol[key]))
     print()
     print("messages")
-    for message, count in messages.most_common(6):
+    for message, count in sorted(messages.items(),
+                                 key=lambda kv: (-kv[1], kv[0]))[:6]:
         print("  %4d  %s" % (count, message))
     print()
 

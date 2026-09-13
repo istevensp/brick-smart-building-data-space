@@ -168,7 +168,9 @@ def main():
     print("-" * 74)
     for label, _, _, _, on_espol in results:
         detail = ", ".join("%s %d" % (key, count)
-                           for key, count in on_espol.most_common())
+                           for key, count in sorted(
+                               on_espol.items(),
+                               key=lambda kv: (-kv[1], kv[0])))
         print("%-46s %s" % (label, detail if detail else "none"))
 
     print()

@@ -93,7 +93,7 @@ def report(label, rows):
           % ("family", "equip", "points", "db_id", "point_type", "units", "broken"))
     print("-" * 78)
     totals = dict(equipment=0, points=0, db_id=0, point_type=0, units=0, broken=0)
-    for key in sorted(rows, key=lambda k: -rows[k]["points"]):
+    for key in sorted(rows, key=lambda k: (-rows[k]["points"], k)):
         row = rows[key]
         print("%-24s %5d %6d %9s %11s %7d %8d"
               % (key, row["equipment"], row["points"],

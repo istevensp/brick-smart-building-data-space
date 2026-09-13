@@ -99,3 +99,21 @@ hardware; the scripts are the part that is.
 | `2026-09-11_07_scalability_100trials.txt` | `07_scalability_repeated.py` | 100 trials, 40 timed queries each, 214 to 3,424 points | 858.8 s |
 | `2026-09-11_08_query_latency_100trials.txt` | `08_query_latency_repeated.py` | 100 trials, 40 timed queries each, three queries | 167.5 s |
 | `2026-09-11_09_readings_in_graph_100trials.txt` | `09_readings_in_graph_repeated.py` | 100 trials, 40 timed queries each, four store sizes | 756.2 s |
+
+
+## `2026-09-12_14_partof_violations.txt`
+
+Script: `Evaluation/14_partof_violations.py`. Lee los ficheros publicados; no
+necesita despliegue.
+
+Explica las cuatro violaciones de `rec:hasPart` y `rec:isPartOf` que el script
+06 cuenta pero no desglosa. **No son el conflicto Brick/REC**: todas caen sobre
+`espol:ESPOL` y los dos jardines, ninguna sobre el departamento, y todas las
+shapes que fallan son de REC.
+
+`espol:ESPOL` es a la vez `rec:Campus` y `rec:Organization`; REC restringe la
+misma pareja de propiedades una vez por jerarquía, y `rec:Campus` desciende de
+`rec:Collection`, no de `rec:Space`.
+
+Cifras que respalda en el paper: la frase de §IV-B sobre las cuatro violaciones
+restantes, y el párrafo *Ontology evolution* de §V.

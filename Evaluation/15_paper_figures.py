@@ -131,7 +131,8 @@ def main():
     print("UNIT IRIs IN USE, BEFORE AND AFTER THE REPAIR")
     print("-" * 58)
     before = Graph()
-    before.parse(os.path.join(ONTOLOGY, "brickESPOLschema.ttl.bak"),
+    before.parse(os.path.join(ONTOLOGY,
+                              "brickESPOLschema-before-unit-repair.ttl"),
                  format="turtle")
     # QUDT unit IRIs are slash-separated, so local() does not shorten them
     def unit_name(term):

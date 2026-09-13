@@ -6,7 +6,8 @@ anything to do with where it fails. This script splits both by device family and
 runs over two versions of the model:
 
   - `brickESPOLschema.ttl`, the released model, repaired
-  - `brickESPOLschema.ttl.bak`, the same model before the unit IRIs were fixed
+  - `brickESPOLschema-before-unit-repair.ttl`, the same model before the unit
+    IRIs were fixed
 
 The second is what makes the 46 broken unit IRIs reproducible at all. Script 01
 reads only the repaired file and therefore reports none of them, which is
@@ -42,7 +43,7 @@ KNOWN_UNITS = {
 
 VERSIONS = [
     ("released, repaired", "brickESPOLschema.ttl"),
-    ("before the repair", "brickESPOLschema.ttl.bak"),
+    ("before the repair", "brickESPOLschema-before-unit-repair.ttl"),
 ]
 
 

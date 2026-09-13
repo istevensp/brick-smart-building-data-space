@@ -24,6 +24,10 @@ trust.
 | `14_partof_violations.py` | Why the four part-of violations fail. They are internal to REC and have nothing to do with Brick | No |
 | `15_paper_figures.py` | The five figures the text stated that no other script produced: densest and sparsest zone, what the points measure, the administrative layer, the MongoDB collections, and the deprecated terms in the release | No |
 
+`12` and `15` also read `Ontology/brickESPOLschema-before-unit-repair.ttl`,
+the model as it stood before the unit IRIs were fixed, so the before/after is
+reproducible.
+
 `01`, `06`, `10`, `12`, `14` and `15` read the published ontology files
 directly, so they run anywhere the repository is checked out.
 

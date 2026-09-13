@@ -37,7 +37,7 @@ Files are named `YYYY-MM-DD_<script>_<configuration>.txt`.
 | Three MongoDB collections, one per laboratory | §IV-E | `15_paper_figures.py` | `2026-09-13_15_paper_figures.txt` |
 | Devices carry between two and eighteen points each | §V | `12_defects_by_family.py` | `2026-09-11_12_defects_by_family.txt` |
 | Five services: Fuseki, MongoDB, Node-RED, Django, React | §V | repository inspection, `Services/` and `WebApp/` | nothing to time |
-| **TDB store 193 MB for a 1.8 MB source file** | §V | `du -sh Services/fuseki/databases/brickESPOL` | **command recorded, output not kept** |
+| TDB store 193 MB for a 1.8 MB source file | §V | `du -h` on `Services/fuseki/databases/brickESPOL` and on `Ontology/brickESPOLschema.ttl` | measured on the deployed store, which the repository does not carry |
 
 ## Superseded runs, kept on purpose
 
@@ -81,10 +81,12 @@ byte-identical files. What varies legitimately is the elapsed time `10` prints
 per configuration, and the timings in `07`, `08`, `09`, `11` and `13`, which are
 measurements.
 
-## The one row still without an artefact
+## The one figure that has no file here
 
-**The 193 MB of the TDB store.** The command is recorded and the figure is
-verifiable locally, but the output was never saved, so it is not reproducible
-from this directory. It is on the to-do list rather than hidden here.
+**The 193 MB of the TDB store.** It is a property of the deployed store, not of
+the published files, so there is no output to keep: the repository carries the
+Turtle source and the store is built by loading it. Both figures come from
+`du -h`, on `Services/fuseki/databases/brickESPOL` and on
+`Ontology/brickESPOLschema.ttl`.
 
 Every other figure in the paper has a file in this directory behind it.

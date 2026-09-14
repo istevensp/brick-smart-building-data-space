@@ -1,8 +1,8 @@
 """Audit the released graph: composition, link coverage and defects.
 
-Reports the figures used in the Results section of the paper. Everything is
-derived from Ontology/brickESPOLschema.ttl, so a reader can reproduce every
-number without access to the deployment.
+Reports the composition of the released model. Everything is derived from
+Ontology/brickESPOLschema.ttl, so a reader can reproduce every number
+without access to the deployment.
 
 Usage:
     python Evaluation/01_graph_audit.py

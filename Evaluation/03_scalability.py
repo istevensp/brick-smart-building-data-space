@@ -1,7 +1,7 @@
 """Measure how query cost grows with the number of described devices.
 
 The replication is SYNTHETIC: the same building is duplicated with renamed IRIs.
-These are not real buildings, and the paper must say so. What the experiment
+These are not real buildings, and the README must say so. What the experiment
 measures is how the cost of a query grows with the number of devices the graph
 describes, not how the system behaves across a real campus.
 

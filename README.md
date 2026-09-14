@@ -1,213 +1,219 @@
 # Brick-Based Semantic Architecture for Smart Building Data Spaces
 
-> A semantic interoperability architecture that connects heterogeneous IoT data, Brick-based building metadata, operational storage, and interactive visualization for smart building and future urban data-space applications.
+Semantic model, deployment and evaluation scripts for Building 11C of Escuela
+Superior Politécnica del Litoral (ESPOL): **37 equipment entities and 214
+measurement points from six device families**, described in Brick Schema and
+RealEstateCore, with the readings kept in MongoDB and reached through an
+identifier carried on the entity.
 
-## Overview
+![System architecture](Figures/architecture.jpg)
 
-Smart buildings produce data from heterogeneous sensors, energy meters, devices, and control systems. These sources often use different identifiers, message formats, and data models, making it difficult to discover, interpret, integrate, and reuse their information across applications.
+The six device families reach Mosquitto over MQTT; Node-RED normalizes each
+payload and writes the readings to MongoDB. The Brick and RealEstateCore model
+lives in Apache Jena Fuseki, a Django API queries both, and a React frontend
+renders the graph.
 
-This repository documents and implements a **Brick-based semantic architecture** for smart building data spaces. The approach combines:
+![Node-RED ingestion flow](Figures/nodered-flow.jpg)
 
-- **IoT devices** based on ESP32/ESP8266 and energy-monitoring equipment;
-- **MQTT** for message delivery;
-- **Node-RED** for ingestion, validation, transformation, and enrichment of sensor data;
-- **MongoDB** for operational, time-dependent sensor records;
-- **Brick Schema** and **Apache Jena Fuseki** for the RDF semantic graph;
-- **Django** services for querying and integrating semantic and operational data; and
-- **ReactFlow** for interactive visualization of the building semantic graph.
+The ingestion flow as it runs, one branch per device family. It is the same
+flow as [`Services/Node-Red/flows.json`](Services/Node-Red/flows.json): the two
+write nodes name the collections `11C-LabIoT` and `11C-LabSN`, and the message
+counters under each node are from the live deployment.
 
-The initial case study models Building 11C at Escuela Superior Politécnica del Litoral (ESPOL), including laboratories, outdoor areas, equipment, sensors, and measurement points.
+## How the pieces fit
 
-## Objectives
+The design separates the two halves of the problem that change at different
+rates. The **semantic layer** describes stable entities — spaces, equipment,
+sensors, units — and the **operational layer** stores the time-dependent
+measurements. Two local properties join them:
 
-- Represent building spaces, equipment, sensors, and points using the Brick Schema vocabulary.
-- Preserve traceability between physical devices, MQTT messages, semantic entities, and operational data records.
-- Enable contextual discovery through SPARQL queries.
-- Support the integration of heterogeneous IoT data into a reusable smart-building data space.
-- Provide a foundation for future smart-city data spaces, digital twins, analytics, and anomaly-detection applications.
+- `espol:db_id` on the equipment names the MongoDB collection and document;
+- `espol:point_type` on the point names the field inside it.
 
-## Architecture
-
-```mermaid
-flowchart LR
-    A[IoT Devices\nESP32 / ESP8266\nEnergy meters / sensors] -->|MQTT| B[MQTT Broker]
-    B --> C[Node-RED\nValidation, transformation, enrichment]
-    C -->|Operational JSON records| D[(MongoDB)]
-
-    E[Brick RDF model\nBuildings, rooms, equipment, points] --> F[(Apache Jena Fuseki)]
-
-    F -->|SPARQL| G[Django Backend API]
-    D -->|MongoDB queries| G
-    G --> H[React + ReactFlow Frontend]
-    H --> I[User / Client]
-```
-
-### Data and semantic linking
-
-The architecture separates stable semantic information from dynamic operational measurements:
-
-- The **RDF graph** stores building metadata and relationships, such as locations, equipment, sensors, units, and points.
-- **MongoDB** stores time-dependent operational measurements.
-- Custom properties such as `espol:db_id` and `espol:point_type` link Brick entities with the corresponding operational data records.
-
-This design allows an application to first retrieve semantic context through SPARQL and then use the resulting operational identifier to request the associated sensor readings.
-
-## Main Components
-
-| Component | Responsibility |
-|---|---|
-| IoT devices | Collect environmental, energy, and operational measurements. |
-| MQTT broker | Delivers sensor messages from devices to the ingestion layer. |
-| Node-RED | Validates messages, normalizes variables, enriches metadata, and prepares JSON records. |
-| MongoDB | Stores dynamic operational sensor measurements. |
-| Brick Schema | Provides a standardized semantic vocabulary for buildings, spaces, equipment, and points. |
-| Apache Jena Fuseki | Stores and serves the RDF graph through a SPARQL endpoint. |
-| Django | Exposes REST services that bridge the semantic graph and operational repository. |
-| ReactFlow | Visualizes RDF entities and relationships as an interactive graph. |
-
-## Repository Structure
+An application resolves context with SPARQL, then uses the resulting identifier
+to fetch readings. The graph stays bounded because the readings never enter it:
+1 257 instance triples, against an order of 450 million a year if they did.
+## Repository structure
 
 ```text
 .
-├── backend/                 # Django project and REST API
-│   ├── apps/
-│   ├── requirements.txt
-│   └── manage.py
-├── frontend/                # React + ReactFlow interface
-│   ├── src/
-│   └── package.json
-├── firmware/                # ESP32 / ESP8266 device firmware
-├── nodered/                 # Exported Node-RED flows and function nodes
-├── semantic/
-│   ├── ontology/            # Brick-aligned ontology extensions and namespaces
-│   ├── data/                # RDF/Turtle building model instances
-│   ├── queries/             # Reusable SPARQL queries
-│   └── shacl/               # SHACL validation shapes
-├── docs/                    # Architecture diagrams, technical documentation, and screenshots
-├── docker/                  # Optional container configuration
-├── .env.example             # Environment-variable template; no credentials
-├── LICENSE
-└── README.md
+├── Ontology/
+│   ├── brickESPOLschema.ttl                     # the released building model
+│   ├── brickESPOLschema-before-unit-repair.ttl  # earlier snapshot; carries the
+│   │                                            # 46 unresolvable unit IRIs
+│   ├── brickESPOLschema.py                      # generator that builds the model
+│   ├── Brick.ttl                                # Brick 1.4.4 distribution
+│   ├── Brick-REC-alignment.ttl                  # official alignment, 130 triples
+│   └── QUDT-units.ttl                           # unit vocabulary, for validation
+├── Evaluation/
+│   ├── 01..15_*.py                              # 15 measurement scripts
+│   ├── results/                                 # raw output, one file per run
+│   ├── requirements.txt                         # rdflib, pyshacl
+│   └── README.md                                # what each script measures
+├── Services/
+│   ├── docker-compose.yml                       # MongoDB and Node-RED
+│   ├── Node-Red/flows.json                      # the ingestion flow in production
+│   └── fuseki/                                  # config.ttl (dataset brickESPOL),
+│                                                # shiro.ini and templates
+├── WebApp/
+│   ├── brickDjangoBackend/                      # REST API over Fuseki and Mongo
+│   └── brickNodejsFrontend/                     # React + ReactFlow graph viewer
+├── Documents/                                   # zone inventories per laboratory
+├── Figures/                                     # architecture and ingestion diagrams
+├── requirements.txt                             # backend dependencies
+├── Dockerfile                                   # container for the Django backend
+└── .env.example                                 # variables to copy into .env
 ```
 
-> Adapt this structure to the folders that are ultimately included in the repository. Do not commit passwords, database URIs containing credentials, API tokens, or private deployment configurations.
+[`Figures/`](Figures/) holds the two diagrams above at the resolution they
+were captured, so the smaller labels — the message counters of the ingestion
+flow among them — stay readable when zoomed.
+
+Two paths are deliberately **not** tracked and are regenerated locally:
+`node_modules/` with `npm install`, and `Services/fuseki/databases/` by loading
+`Ontology/brickESPOLschema.ttl` into Fuseki.
 
 ## Requirements
 
-The implementation uses the following technologies:
+| | |
+|---|---|
+| Python | 3.10+ (the container image uses 3.14) |
+| Node.js | 18+ |
+| MongoDB | 6+ |
+| Apache Jena Fuseki | 5.1.0 (the deployment runs `stain/jena-fuseki` on Java 21) |
+| Node-RED | any recent release, with a MongoDB node |
+| MQTT broker | Eclipse Mosquitto |
 
-- Python 3.10+ and Django
-- Node.js 18+ and React
-- ReactFlow
-- MQTT broker, such as Eclipse Mosquitto
-- Node-RED
-- MongoDB 6+
-- Apache Jena Fuseki 4+
-- RDFLib and SPARQLWrapper
-- Brick Schema
+The evaluation scripts need only `rdflib==7.1.4` and `pyshacl==0.30.1`.
 
-## Quick Start
+## Quick start
 
-### 1. Clone the repository
+### 1. Clone and configure
 
 ```bash
-git clone https://github.com/<your-github-user>/brick-smart-building-data-space.git
+git clone https://github.com/istevensp/brick-smart-building-data-space.git
 cd brick-smart-building-data-space
-```
-
-### 2. Configure environment variables
-
-Create a local environment file from the template:
-
-```bash
 cp .env.example .env
 ```
 
-Example configuration:
+There are **two** `.env` files and neither is tracked. This one, at the root,
+is read by the Django backend and the evaluation scripts: `FUSEKI_SPARQL_ENDPOINT`,
+`FUSEKI_UPDATE_ENDPOINT`, `FUSEKI_USER`, `FUSEKI_PASSWORD` and `MONGODB_ENDPOINT`.
+The second, `Services/.env`, is read by Docker Compose and is set up in step 2.
 
-```dotenv
-# MQTT
-MQTT_BROKER_HOST=localhost
-MQTT_BROKER_PORT=1883
+### 2. Start MongoDB and Node-RED
 
-# MongoDB
-MONGODB_URI=mongodb://localhost:27017
-MONGODB_DATABASE=smart_building
-
-# Apache Jena Fuseki
-FUSEKI_URL=http://localhost:3030
-FUSEKI_DATASET=building11c
-
-# Django
-DJANGO_SECRET_KEY=replace-this-with-a-secure-local-value
-DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
-```
-
-### 3. Start infrastructure services
-
-Start or configure the MQTT broker, MongoDB, and Apache Jena Fuseki according to your local or containerized deployment.
-
-For Fuseki, create or load the dataset used by the project and import the Brick-based RDF files from `semantic/data/`.
-
-### 4. Run the Django backend
+The compose file reads its credentials from `Services/.env`, which is
+git-ignored. Create it first, or `docker compose` stops with a message naming
+the variable it is missing:
 
 ```bash
-cd backend
-python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+cd Services
+cp .env.example .env      # then fill in the four values
+docker compose up -d
+```
+
+`NODERED_ADMIN_PASSWORD_HASH` is a bcrypt hash, not a password. Generate it
+with `node-red admin hash-pw`.
+
+### 3. Start Fuseki and load the model
+
+Fuseki reads its users from `Services/fuseki/shiro.ini`, which is git-ignored
+for the same reason. Copy the template and set a password:
+
+```bash
+cp Services/fuseki/shiro.ini.example Services/fuseki/shiro.ini
+```
+
+Then run Fuseki with `Services/fuseki/config.ttl`, which declares a TDB2
+dataset named `brickESPOL`, and load the model:
+
+```bash
+curl -u "$FUSEKI_USER:$FUSEKI_PASSWORD" -X POST -H 'Content-Type: text/turtle' --data-binary @Ontology/brickESPOLschema.ttl "$FUSEKI_BASE/brickESPOL/data?default"
+```
+
+The store this produces occupies about 193 MB on disk for the 1.8 MB Turtle
+source, which is why it is not tracked here.
+
+### 4. Run the backend
+
+```bash
+python -m venv .brick_env
+source .brick_env/bin/activate
 pip install -r requirements.txt
+cd WebApp/brickDjangoBackend
 python manage.py migrate
 python manage.py runserver
 ```
 
-### 5. Run the React frontend
+On Windows the activation line is `.brick_env\Scripts\activate`. In a container:
 
 ```bash
-cd frontend
+docker build -t brick-backend .
+docker run --env-file .env -p 8000:8000 brick-backend
+```
+
+`DJANGO_ALLOWED_HOSTS` has to name the host the client asks for, or Django
+answers **400 DisallowedHost**. Reaching the container at `localhost:8000`
+works with the default; anything else — another container, an IP, a domain —
+has to be listed:
+
+```bash
+docker run --env-file .env -p 8000:8000 \
+  -e DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,your.host \
+  -e DJANGO_DEBUG=0 \
+  -e DJANGO_SECRET_KEY=... \
+  brick-backend
+```
+
+**Set `DJANGO_DEBUG=0` for anything reachable from outside.** With DEBUG on,
+the 400 page above is 58 KB of stack trace and settings; with it off, 143
+bytes.
+
+### 5. Run the frontend
+
+```bash
+cd WebApp/brickNodejsFrontend/frontend
 npm install
-npm run dev
+npm start
 ```
 
-### 6. Import Node-RED flows
+`WebApp/brickNodejsFrontend/frontend/package.json` sets `proxy` to the host this was deployed on. **Point
+it at your own backend** before running it elsewhere.
 
-1. Open the Node-RED editor.
-2. Import the flow files from `nodered/`.
-3. Configure the MQTT, MongoDB, and metadata variables for your environment.
-4. Deploy the flows.
+### 6. Import the Node-RED flow
 
-## Sensor Message Contract
+Import `Services/Node-Red/flows.json` from the Node-RED editor, set the MQTT
+broker and the MongoDB connection for your environment, and deploy. The flow
+writes to two collections, `11C-LabIoT` and `11C-LabSN`; a third, `11C-LabRDD`,
+is named by the model and is not written by this flow.
 
-Every device message should include enough metadata to preserve traceability between the device, its operational data, and its semantic representation.
+## Reproducing the measurements
 
-Illustrative payload:
-
-```json
-{
-  "timestamp": "2026-06-19T18:30:00Z",
-  "db_id": "11C-LabIoT:airQ1",
-  "point_type": "temp",
-  "topic": "espol/11c/labiot/airq1",
-  "value": 24.5,
-  "unit": "degC"
-}
+```bash
+pip install -r Evaluation/requirements.txt
+python Evaluation/01_graph_audit.py
 ```
 
-The exact payload may include additional fields for device identifier, measurement type, phase-specific energy measurements, location metadata, quality flags, or units of measurement.
+Six of the fifteen scripts — `01`, `06`, `10`, `12`, `14` and `15` — read the
+published ontology files and **need no running deployment**. The rest build
+in-memory datasets or query the endpoint, and read `FUSEKI_*` from the
+environment.
 
-## Semantic Model
+[`Evaluation/README.md`](Evaluation/README.md) says what each script measures
+and which of them need a deployment.
+[`Evaluation/results/README.md`](Evaluation/results/README.md) lists what each
+run reports, the output file it writes, and how long it takes.
 
-The semantic layer uses Brick classes and properties to represent the smart-building context. Typical entities include:
+Counts do not vary between runs, and ties are broken by name, so two runs of the
+same script produce byte-identical files. Every timing is a median across
+repeated trials with the interquartile range between them.
 
-- `brick:Building`
-- `brick:Room`
-- `brick:Equipment`
-- `brick:Point`
-- Sensor-specific classes such as `brick:Temperature_Sensor`
+## Semantic model
 
-A local `espol:` namespace is used for campus-specific instances and linking properties.
-
-Illustrative RDF/Turtle representation:
+Assets use Brick classes; the spatial layer uses the RealEstateCore classes that
+Brick 1.4.4 names as replacements for its own deprecated location hierarchy.
+Two local properties carry the join to the operational store:
 
 ```turtle
 @prefix brick: <https://brickschema.org/schema/Brick#> .
@@ -225,114 +231,96 @@ espol:airQuality1_temp a brick:Temperature_Sensor ;
     espol:point_type "temp" .
 ```
 
-## Example SPARQL Query
+A point costs four or five triples and a device three of its own, so the model
+grows with what is installed rather than with how long it has been running.
 
-The following query retrieves sensors, their associated equipment, optional units, and the identifier required to retrieve operational data:
+### Example query
+
+Every sensor with its equipment, unit and operational identifier:
 
 ```sparql
 PREFIX brick: <https://brickschema.org/schema/Brick#>
 PREFIX espol: <https://www.espol.edu.ec/ESPOL#>
 
-SELECT ?sensor ?equipment ?unit ?db_id ?point_type
+SELECT ?sensor ?equipment ?unit ?db_id
 WHERE {
-  ?sensor brick:isPointOf ?equipment .
-  OPTIONAL { ?sensor brick:hasUnit ?unit . }
-  OPTIONAL { ?sensor espol:point_type ?point_type . }
-
-  ?equipment a brick:Equipment ;
-             espol:db_id ?db_id .
-
-  FILTER(STRSTARTS(STR(?sensor), STR(espol:)))
+    ?sensor brick:isPointOf ?equipment .
+    OPTIONAL { ?sensor brick:hasUnit ?unit. }
+    FILTER(STRSTARTS(STR(?sensor), STR(espol:)))
+    ?equipment a brick:Equipment ;
+               espol:db_id ?db_id .
 }
 ```
+
+More queries are collected in `WebApp/brickDjangoBackend/FusekiQueries.txt`.
 
 ## Validation
 
-The implementation should validate the architecture at three complementary levels:
+`Evaluation/06_brick_validation.py` validates the model with pySHACL against the
+254 node shapes of the Brick 1.4.4 distribution, with QUDT resolved into the
+data graph and RDFS inference enabled. It reports **41 violations on the
+building model**, and they are not defects of this model:
 
-1. **IoT data transmission:** Verify that messages are successfully published, ingested, transformed, and stored in MongoDB.
-2. **Semantic consistency:** Verify that spaces, equipment, sensors, points, units, and identifiers are correctly represented in the Brick graph.
-3. **Traceability and queryability:** Verify that a sensor can be resolved from the RDF graph to its operational identifier and measurement records.
+- **37** come from `brick:hasLocation`. The release carries two shapes for that
+  property and they do not agree: the one on `brick:Equipment` accepts a
+  `rec:Space`, the one on `brick:Entity` accepts only a `brick:Location` — a
+  class the same release deprecates in favour of RealEstateCore.
+  `10_crossvalidation.py` shows the official Brick–REC alignment changes the
+  count by zero, and `15_model_summary.py` prints both shapes.
+- **4** are internal to RealEstateCore: the campus is typed both `rec:Campus`
+  and `rec:Organization`, and REC constrains the part-of properties once per
+  hierarchy. `14_partof_violations.py` shows Brick has no part in these.
 
-SHACL constraints can be used to prevent incomplete mappings. For example, a semantic point intended to access operational readings should provide the required metadata, such as an operational identifier and point type.
+The two linking properties are declared as SHACL property shapes on
+`brick:Point` that fix their datatype and bound their cardinality at one. They
+do **not** require the properties to be present, and no validator runs during
+ingestion, so consistency is a property of the registration procedure rather
+than one the deployment enforces.
 
-## API Scope
+## Security
 
-The Django backend is expected to provide endpoints for operations such as:
-
-- Listing all semantically registered sensors.
-- Retrieving equipment, location, units, and operational identifiers for a sensor.
-- Requesting recent measurements from MongoDB using a semantic identifier.
-- Returning graph data for the ReactFlow interface.
-- Validating semantic or ingestion records before registration.
-
-Document the final endpoints in `docs/api.md` or through an OpenAPI/Swagger definition once they are stable.
-
-## Data Management and Security
-
-- Keep device credentials, broker passwords, database credentials, and API tokens outside version control.
-- Use `.env` files locally and commit only `.env.example`.
-- Avoid publishing raw operational data that may reveal private infrastructure details unless it has been reviewed and anonymized.
-- Apply access control to MQTT topics, MongoDB, Fuseki, and the backend in deployed environments.
-- Validate incoming messages before persistence to reduce malformed or incomplete semantic links.
-
-## Roadmap
-
-- [ ] Extend the semantic model to additional ESPOL buildings.
-- [ ] Incorporate renewable-energy, security, and public-campus infrastructure domains.
-- [ ] Automate semantic consistency checks with SHACL.
-- [ ] Add containerized deployment with Docker Compose.
-- [ ] Integrate a 3D digital-twin platform for visualization and simulation.
-- [ ] Add semantic-aware analytics, anomaly detection, and predictive-maintenance workflows.
-- [ ] Publish reusable SPARQL query collections and model documentation.
-
-## Contributing
-
-Contributions are welcome from researchers, students, and practitioners interested in smart buildings, semantic interoperability, IoT, digital twins, and urban data spaces.
-
-1. Fork the repository.
-2. Create a branch for your contribution.
-3. Keep credentials and sensitive deployment details out of commits.
-4. Document changes to the ontology, data model, API, or Node-RED flow.
-5. Submit a pull request with a clear description and validation evidence.
+- `.env` is git-ignored; only `.env.example` is tracked.
+- No credential is tracked. `Services/.env` and
+  `Services/fuseki/shiro.ini` hold them and are git-ignored; the repository
+  ships `.env.example` and `shiro.ini.example` instead.
+- `Services/Node-Red/flows.json` uses the documentation addresses of RFC 5737
+  (`192.0.2.x`) where the original deployment had its own hosts. Point the MQTT
+  and MongoDB nodes at yours before deploying the flow.
+- **Earlier values remain in the git history.** Anything that was ever
+  committed must be treated as disclosed and rotated, not just removed.
+- Apply access control to MQTT, MongoDB, Fuseki and the backend in any
+  environment reachable from outside.
 
 ## Citation
 
-If you use this repository in academic work, please cite the associated manuscript:
-
 ```bibtex
-@misc{Santillan2026BrickDataSpace,
-  author = {Steven Santillan and Kevin Vargas and Pier Colina and Jose Cordova-Garcia},
-  title = {Towards Urban Data Interoperability: A Brick-Based Semantic Architecture for Smart Building Data Spaces},
-  year = {2026},
-  note = {Project repository and manuscript under preparation}
+@inproceedings{Santillan2026BrickDataSpace,
+  author    = {Steven Santillan and Kevin Vargas and Pier Colina and Jose Cordova-Garcia},
+  title     = {Towards Urban Data Interoperability: A Brick-Based Semantic
+               Architecture for Smart Building Data Spaces},
+  booktitle = {2026 IEEE International Smart Cities Conference (ISC2)},
+  year      = {2026}
 }
 ```
 
-Update this entry with the final venue, DOI, and publication details when available.
+Update the entry with the pages and DOI once they are assigned.
 
 ## Authors
 
-- Steven Santillan — Escuela Superior Politécnica del Litoral (ESPOL)
-- Kevin Vargas — Escuela Superior Politécnica del Litoral (ESPOL)
-- Pier Colina — Escuela Superior Politécnica del Litoral (ESPOL)
-- Jose Cordova-Garcia — Escuela Superior Politécnica del Litoral (ESPOL)
+Steven Santillan, Kevin Vargas, Pier Colina and Jose Cordova-Garcia — Faculty of
+Electrical Engineering and Computer Science, Escuela Superior Politécnica del
+Litoral (ESPOL), Guayaquil, Ecuador.
 
 ## License
 
-This project is licensed under the GNU Affero General Public License v3.0 only
-(AGPL-3.0-only).
+GNU Affero General Public License v3.0 only (AGPL-3.0-only). You may use, study,
+modify and redistribute this software under its terms; if you modify it and make
+it available to users over a network, you must also give those users access to
+the corresponding source of your modified version.
 
-You may use, study, modify, and redistribute this software under the terms of
-the AGPL-3.0-only license. If you modify this software and make it available to
-users over a network, you must also provide those users with access to the
-corresponding source code of the modified version.
+Unless stated otherwise this covers the source code, the Node-RED flow, the
+RDF/Turtle models, the SPARQL queries and the deployment configuration in this
+repository. Third-party libraries and the Brick, RealEstateCore and QUDT
+vocabularies remain under their own licenses.
 
-Unless otherwise stated, this license applies to the source code, Node-RED
-flows, RDF/TTL semantic models, SPARQL queries, SHACL constraints, deployment
-scripts, and example configurations included in this repository.
-
-Third-party libraries, frameworks, and dependencies remain subject to their
-respective licenses.
-
-See the [LICENSE](LICENSE) file for the full license text.
+See [LICENSE](LICENSE) for the full text.

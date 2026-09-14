@@ -6,8 +6,10 @@ anything to do with where it fails. This script splits both by device family and
 runs over two versions of the model:
 
   - `brickESPOLschema.ttl`, the released model, repaired
-  - `brickESPOLschema-before-unit-repair.ttl`, the same model before the unit
-    IRIs were fixed
+  - `brickESPOLschema-before-unit-repair.ttl`, an earlier snapshot and the one
+    that carries the broken unit IRIs. It differs from the released model in
+    more than those, so it serves the unit comparison below and not a
+    validation baseline
 
 The second is what makes the 46 broken unit IRIs reproducible at all. Script 01
 reads only the repaired file and therefore reports none of them, which is

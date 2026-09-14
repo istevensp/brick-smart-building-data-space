@@ -9,7 +9,7 @@ ESP32 air quality nodes      5     15       5/5       15/15      15        0
 Weather station              1      6       1/1         6/6       6        0
 TOTAL                       37    214     37/37     214/214     183        0
 
-before the repair  (brickESPOLschema.ttl.bak)
+before the repair  (brickESPOLschema-before-unit-repair.ttl)
 family                   equip points     db_id  point_type   units   broken
 ------------------------------------------------------------------------------
 Sonoff S31 sockets          19    114     19/19     114/114      95       40

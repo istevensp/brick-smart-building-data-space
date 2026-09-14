@@ -73,11 +73,14 @@ module.exports = {
     /** To password protect the Node-RED editor and admin API, the following
      * property can be used. See https://nodered.org/docs/security.html for details.
      */
+    /** Both values come from the environment. Generate the hash with
+     *   node-red admin hash-pw
+     * and put it in NODERED_ADMIN_PASSWORD_HASH. */
     adminAuth: {
         type: "credentials",
         users: [{
-            username: "***REMOVED***",
-            password: "***REMOVED***",
+            username: process.env.NODERED_ADMIN_USER,
+            password: process.env.NODERED_ADMIN_PASSWORD_HASH,
             permissions: "*"
         }]
     },

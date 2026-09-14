@@ -1,0 +1,17 @@
+# Keep the build context small and free of secrets.
+.env
+.git
+.brick_env/
+node_modules/
+__pycache__/
+*.py[cod]
+
+# The development database: regenerated with manage.py migrate
+**/*.sqlite3
+
+# Not needed to run the backend
+Evaluation/
+Ontology/
+Documents/
+Services/fuseki/databases/
+WebApp/brickNodejsFrontend/

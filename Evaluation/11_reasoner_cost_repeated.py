@@ -1,7 +1,7 @@
 """Repeat 05 over many trials, because a single pass does not reproduce.
 
-Script 05 runs the comparison once. The figures the paper prints from it -- 1.5x
-at 214 points, 1.8 at 856, 2.2 at 3,424, and "between 1.0 and 1.1" for the
+Script 05 runs the comparison once. The figures it printed -- 1.5x at 214
+points, 1.8 at 856, 2.2 at 3,424, and "between 1.0 and 1.1" for the
 structural queries -- come from single invocations, and a later invocation of the
 same script on the same data produced 1.3x, 1.6x, 2.1x and a structural factor
 as low as 0.5x. A reasoner cannot make a query twice as fast; 0.5x is noise, and

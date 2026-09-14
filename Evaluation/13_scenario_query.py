@@ -1,7 +1,7 @@
-"""Time the query the end-to-end scenario in the paper actually describes.
+"""Time the query the worked scenario actually describes.
 
 Script 08 times three queries, and the third asks for every temperature sensor
-in the building. The scenario in Section V describes something narrower: the
+in the building. The worked scenario is narrower: the
 temperature sensors of one laboratory, reached by walking the REC spatial
 hierarchy from the equipment's zone up to the laboratory it is part of. That
 query was described in prose and never measured, so the scenario carried no

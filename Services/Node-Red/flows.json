@@ -2,10 +2,80 @@
     {
         "id": "da4a55b3415a9144",
         "type": "tab",
-        "label": "Flow 2",
+        "label": "Flow 1",
         "disabled": false,
         "info": "",
         "env": []
+    },
+    {
+        "id": "938858c8b5c0abef",
+        "type": "mqtt-broker",
+        "name": "mqtt2",
+        "broker": "192.0.2.11",
+        "port": "1883",
+        "clientid": "BrickNodeRed",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": false,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "26da50faa612a23d",
+        "type": "influxdb",
+        "hostname": "http://192.0.2.10",
+        "port": "8096",
+        "protocol": "http",
+        "database": "m1",
+        "name": "influxdb",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://192.0.2.10:8096",
+        "timeout": "10",
+        "rejectUnauthorized": false
+    },
+    {
+        "id": "cc2e1a24e3be2203",
+        "type": "mongodb4-client",
+        "name": "brickSensors",
+        "protocol": "mongodb",
+        "hostname": "192.0.2.10",
+        "port": "54321",
+        "dbName": "brickSensores",
+        "appName": "ProyectoBrickMongoDB",
+        "authSource": "",
+        "authMechanism": "DEFAULT",
+        "tls": false,
+        "tlsCAFile": "",
+        "tlsCertificateKeyFile": "",
+        "tlsInsecure": false,
+        "connectTimeoutMS": "30000",
+        "socketTimeoutMS": "0",
+        "minPoolSize": "0",
+        "maxPoolSize": "100",
+        "maxIdleTimeMS": "0",
+        "uri": "",
+        "advanced": "{}",
+        "uriTabActive": "tab-uri-simple"
     },
     {
         "id": "c24384aede3a4bbb",
@@ -158,10 +228,10 @@
         "rh": 0,
         "inputs": 0,
         "x": 160,
-        "y": 320,
+        "y": 360,
         "wires": [
             [
-                "d9bae3cfebd66be9"
+                "e12702eaa246f574"
             ]
         ]
     },
@@ -169,40 +239,40 @@
         "id": "d9bae3cfebd66be9",
         "type": "function",
         "z": "da4a55b3415a9144",
-        "name": "MongoDBPayload2",
-        "func": "let sensor_id = msg.topic.split(\"/\")[2];\nlet sensedAt = new Date().getTime();\nlet energy_data = msg.payload.ENERGY\nlet body = {\n    sensorID : sensor_id,\n    data : energy_data,\n    timestamp : sensedAt\n}\n\nreturn { payload: body };",
+        "d": true,
+        "name": "MongoDBSonoffPayload",
+        "func": "let sensor_id = msg.topic.split(\"/\")[2];\nlet sensedAt = new Date();\nlet energy_data = msg.payload.ENERGY\nlet mongo_payload = [];\n\nlet excludedKeys = [\"TotalStartTime\", \"Total\", \"Yesterday\", \"Today\", \"Period\"];\n\nfor (let key in energy_data) {\n    if (!excludedKeys.includes(key)) {\n        mongo_payload.push({\n            metadata: {sensorId: sensor_id, type: key.toLowerCase()},\n            timestamp: sensedAt,\n            [key]: energy_data[key]\n        })\n    }\n}\n\nmsg.payload = [mongo_payload]\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 430,
-        "y": 320,
+        "x": 410,
+        "y": 1240,
         "wires": [
-            [
-                "9093991d776de45f"
-            ]
+            []
         ]
     },
     {
         "id": "1c1734702fb4ed85",
         "type": "mqtt in",
         "z": "da4a55b3415a9144",
+        "d": true,
         "name": "",
-        "topic": "shellies/#",
-        "qos": "0",
+        "topic": "shellies/+/emeter/+/#",
+        "qos": "2",
         "datatype": "auto-detect",
         "broker": "938858c8b5c0abef",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 120,
-        "y": 420,
+        "x": 160,
+        "y": 1280,
         "wires": [
             [
-                "440a210c5b17cba0"
+                "aff087d95265d1eb"
             ]
         ]
     },
@@ -220,29 +290,12 @@
         "rh": 0,
         "inputs": 0,
         "x": 150,
-        "y": 520,
+        "y": 280,
         "wires": [
             [
-                "e172632d87cd5350",
-                "bd16c8487e93038b"
+                "fb2edee8f6129a11"
             ]
         ]
-    },
-    {
-        "id": "9093991d776de45f",
-        "type": "debug",
-        "z": "da4a55b3415a9144",
-        "name": "debug 5",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 620,
-        "y": 320,
-        "wires": []
     },
     {
         "id": "440a210c5b17cba0",
@@ -256,16 +309,36 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 320,
-        "y": 420,
+        "x": 1320,
+        "y": 500,
         "wires": []
     },
     {
         "id": "e172632d87cd5350",
         "type": "function",
         "z": "da4a55b3415a9144",
+        "d": true,
         "name": "MongoDBPayload",
-        "func": "let sensor_id = msg.topic.split(\"/\")[3];\nlet datalist = msg.payload.data;\nlet data_payload = {};\n\nfor (let index = 0; index < datalist.length; index++) {\n    data_payload[Object.keys(datalist[index])] = Object.values(datalist[index])[0];\n}\n\n\nlet sensedAt = new Date().getTime();\nlet msg_body = {\n    sensorID : sensor_id,\n    data : data_payload,\n    timestamp : sensedAt\n}\nreturn { payload: msg_body};",
+        "func": "let sensor_id = msg.topic.split(\"/\")[3];\nlet sensedAt = new Date();\nlet mongo_payload = [];\nif (sensor_id === \"Accuenergy\") {\n    let datalist = msg.payload.device.readings;\n\n    const paramTypeMap = {\n        V1: \"voltage\", V2: \"voltage\", V3: \"voltage\",\n        I1: \"current\", I2: \"current\", I3: \"current\",\n        P1: \"power\", P2: \"power\", P3: \"power\",\n        Q1: \"reactivepower\", Q2: \"reactivepower\", Q3: \"reactivepower\",\n        S1: \"apparentpower\", S2: \"apparentpower\", S3: \"apparentpower\",\n        PF1: \"pf\", PF2: \"pf\", PF3: \"pf\"\n    };\n\n    for (let i of datalist) {\n        let param = i[\"param\"];\n        let value = parseFloat(i[\"value\"]);\n        if (paramTypeMap.hasOwnProperty(param)) {\n            let point_type = paramTypeMap[param];\n            mongo_payload.push({\n                metadata: { sensorId: sensor_id, type: point_type },\n                timestamp: sensedAt,\n                [param]: value.toFixed(2)\n            });\n        }\n    }\n\n    msg.payload = [mongo_payload];\n    return msg;\n} else {\n    let datalist = msg.payload.data;\n    for (let index = 0; index < datalist.length; index++) {\n        let point_type = Object.keys(datalist[index])[0];\n        let point = Object.values(datalist[index])[0];\n        if (typeof point === \"number\" && !Number.isInteger(point)) {\n            point = parseFloat(point.toFixed(2));\n        }\n        mongo_payload.push({\n            metadata: { sensorId: sensor_id, type: point_type },\n            timestamp: sensedAt,\n            [point_type]: point\n        });\n    }\n\n    msg.payload = [mongo_payload]\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "aff087d95265d1eb",
+        "type": "function",
+        "z": "da4a55b3415a9144",
+        "d": true,
+        "name": "MongoDBShellysPayload",
+        "func": "let mqtt_topic_fields = msg.topic.split(\"/\");\nlet phase;\nswitch (mqtt_topic_fields[3]){\n    case \"0\":\n        phase = \"A\"\n        break;\n    case \"1\":\n        phase = \"B\"\n        break;\n    case \"2\":\n        phase = \"C\"\n        break;\n    default:\n        phase = \"Unknown\"\n        break;\n}\nlet component = mqtt_topic_fields[4]\nlet sensor_id = mqtt_topic_fields[1];\nlet sensor_type = component + \"_\" + phase;\nlet sensedAt = new Date();\nif(component !== \"total_returned\" && component !== \"total\"){\n    msg.payload = [{\n        metadata: { sensorId: sensor_id, type: component },\n        [sensor_type]: msg.payload,\n        timestamp: sensedAt\n    }]\n    return msg;\n}else{\n    return null;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -273,18 +346,413 @@
         "finalize": "",
         "libs": [],
         "x": 410,
-        "y": 680,
+        "y": 1280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d3c725b03492281a",
+        "type": "mongodb4",
+        "z": "da4a55b3415a9144",
+        "clientNode": "cc2e1a24e3be2203",
+        "mode": "collection",
+        "collection": "11C-LabIoT",
+        "operation": "insertOne",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "insertOneLabIoT",
+        "x": 1130,
+        "y": 500,
         "wires": [
             [
-                "46cc9f2119dabbe5"
+                "440a210c5b17cba0"
             ]
         ]
     },
     {
-        "id": "46cc9f2119dabbe5",
+        "id": "fc3d9c357c51f2fa",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-349454756742_phaseA",
+        "topic": "shellies/shellyem3-349454756742/emeter/0/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 440,
+        "wires": [
+            [
+                "cb589e4203aa77c6"
+            ]
+        ]
+    },
+    {
+        "id": "cb589e4203aa77c6",
+        "type": "join",
+        "z": "da4a55b3415a9144",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "24",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 450,
+        "y": 500,
+        "wires": [
+            [
+                "4738d562e6b5be5c"
+            ]
+        ]
+    },
+    {
+        "id": "a6da7b9706618745",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-349454756742_phaseB",
+        "topic": "shellies/shellyem3-349454756742/emeter/1/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 500,
+        "wires": [
+            [
+                "cb589e4203aa77c6"
+            ]
+        ]
+    },
+    {
+        "id": "46fbdd40c9357a88",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-349454756742_phaseC",
+        "topic": "shellies/shellyem3-349454756742/emeter/2/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 560,
+        "wires": [
+            [
+                "cb589e4203aa77c6"
+            ]
+        ]
+    },
+    {
+        "id": "4738d562e6b5be5c",
+        "type": "function",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-349454756742_MongoDB",
+        "func": "let sensedAt = new Date();\n\nlet mongo_msg = {\n    metadata: {\n        sensorId: \"shellyem3-349454756742\"\n    },\n    timestamp: sensedAt\n};\n\nfor (let key in msg.payload) {\n    if (key.endsWith(\"total_returned\")) {\n        continue;\n    }\n\n    let datalist = key.split(\"/\");\n\n    let phaseNumber = datalist[3];\n    let measurement = datalist[4];\n\n    let phase;\n    switch (phaseNumber) {\n        case \"0\":\n            phase = \"A\";\n            break;\n        case \"1\":\n            phase = \"B\";\n            break;\n        case \"2\":\n            phase = \"C\";\n            break;\n        default:\n            phase = \"unknown\";\n    }\n\n    let new_key = measurement + phase;\n    mongo_msg[new_key] = msg.payload[key];\n}\n\nreturn { payload: [mongo_msg] };\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 500,
+        "wires": [
+            [
+                "d3c725b03492281a"
+            ]
+        ]
+    },
+    {
+        "id": "348dd884a9987ad3",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-485519DC84EC_phaseA",
+        "topic": "shellies/shellyem3-485519DC84EC/emeter/0/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 620,
+        "wires": [
+            [
+                "a5457981ed6a9715"
+            ]
+        ]
+    },
+    {
+        "id": "ca70d02573a8a283",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-485519DC84EC_phaseB",
+        "topic": "shellies/shellyem3-485519DC84EC/emeter/1/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 680,
+        "wires": [
+            [
+                "a5457981ed6a9715"
+            ]
+        ]
+    },
+    {
+        "id": "7558637431177809",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-485519DC84EC_phaseC",
+        "topic": "shellies/shellyem3-485519DC84EC/emeter/2/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 740,
+        "wires": [
+            [
+                "a5457981ed6a9715"
+            ]
+        ]
+    },
+    {
+        "id": "a5457981ed6a9715",
+        "type": "join",
+        "z": "da4a55b3415a9144",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "24",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 450,
+        "y": 680,
+        "wires": [
+            [
+                "590c4e61f244b0b4"
+            ]
+        ]
+    },
+    {
+        "id": "590c4e61f244b0b4",
+        "type": "function",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-485519DC84EC_MongoDB",
+        "func": "let sensedAt = new Date();\n\nlet mongo_msg = {\n    metadata: {\n        sensorId: \"shellyem3-485519DC84EC\"\n    },\n    timestamp: sensedAt\n};\n\nfor (let key in msg.payload) {\n    if (key.endsWith(\"total_returned\")) {\n        continue;\n    }\n\n    let datalist = key.split(\"/\");\n\n    let phaseNumber = datalist[3];\n    let measurement = datalist[4];\n\n    let phase;\n    switch (phaseNumber) {\n        case \"0\":\n            phase = \"A\";\n            break;\n        case \"1\":\n            phase = \"B\";\n            break;\n        case \"2\":\n            phase = \"C\";\n            break;\n        default:\n            phase = \"unknown\";\n    }\n\n    let new_key = measurement + phase;\n    mongo_msg[new_key] = msg.payload[key];\n}\n\nreturn { payload: [mongo_msg] };\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 680,
+        "wires": [
+            [
+                "d3c725b03492281a"
+            ]
+        ]
+    },
+    {
+        "id": "e1562a3f6cdb5d6f",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-C45BBE5FD50D_phaseA",
+        "topic": "shellies/shellyem3-C45BBE5FD50D/emeter/0/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 800,
+        "wires": [
+            [
+                "a672e145d8f0e04e"
+            ]
+        ]
+    },
+    {
+        "id": "0b31c0089a05e974",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-C45BBE5FD50D_phaseB",
+        "topic": "shellies/shellyem3-C45BBE5FD50D/emeter/1/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 860,
+        "wires": [
+            [
+                "a672e145d8f0e04e"
+            ]
+        ]
+    },
+    {
+        "id": "f024cf051fab1364",
+        "type": "mqtt in",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-C45BBE5FD50D_phaseC",
+        "topic": "shellies/shellyem3-C45BBE5FD50D/emeter/2/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 920,
+        "wires": [
+            [
+                "a672e145d8f0e04e"
+            ]
+        ]
+    },
+    {
+        "id": "a672e145d8f0e04e",
+        "type": "join",
+        "z": "da4a55b3415a9144",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "24",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 450,
+        "y": 860,
+        "wires": [
+            [
+                "3d232585742146a1",
+                "e2ad21cb2a4f7a6f"
+            ]
+        ]
+    },
+    {
+        "id": "fb2edee8f6129a11",
+        "type": "function",
+        "z": "da4a55b3415a9144",
+        "name": "MongoDBLabIoT",
+        "func": "let sensor_id = msg.topic.split(\"/\")[3];\nlet sensedAt = new Date();\nlet mongo_payload = {\n    metadata: {sensorId : sensor_id},\n    timestamp: sensedAt\n};\nif (sensor_id === \"Accuenergy\") {\n    let datalist = msg.payload.device.readings;\n    const paramTypeMap = {\n        V1: \"voltageA\", V2: \"voltageB\", V3: \"voltageC\",\n        I1: \"currentA\", I2: \"currentB\", I3: \"currentC\",\n        P1: \"powerA\", P2: \"powerB\", P3: \"powerC\",\n        Q1: \"reactivepowerA\", Q2: \"reactivepowerB\", Q3: \"reactivepowerC\",\n        S1: \"apparentpowerA\", S2: \"apparentpowerB\", S3: \"apparentpowerC\",\n        PF1: \"pfA\", PF2: \"pfB\", PF3: \"pfC\"\n    };\n\n    for (let i of datalist) {\n        let param = i[\"param\"];\n        let value = parseFloat(i[\"value\"]);\n        if (paramTypeMap.hasOwnProperty(param)) {\n            mongo_payload[paramTypeMap[param]] = value;\n        }\n    }\n\n    msg.payload = [mongo_payload];\n    return msg;\n} else {\n    let datalist = msg.payload.data;\n    for (const index of datalist) {\n        mongo_payload = {...mongo_payload, ...index};\n    }\n    msg.payload = [mongo_payload]\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 280,
+        "wires": [
+            [
+                "d3c725b03492281a"
+            ]
+        ]
+    },
+    {
+        "id": "e12702eaa246f574",
+        "type": "function",
+        "z": "da4a55b3415a9144",
+        "name": "MongoDBSonoffPayload",
+        "func": "let sensor_id = msg.topic.split(\"/\")[2];\nlet sensedAt = new Date();\nlet energy_data = msg.payload.ENERGY\nlet mongo_payload = {\n    metadata: {sensorId: sensor_id},\n    timestamp: sensedAt\n};\n\nlet excludedKeys = [\"TotalStartTime\", \"Total\", \"Yesterday\", \"Today\", \"Period\"];\n\nfor (let key of excludedKeys) {\n    delete energy_data[key];\n}\n\nfor (let key of Object.keys(energy_data)) {\n    let new_key = key.toLowerCase();\n    mongo_payload[new_key] = energy_data[key];\n}\n\nmsg.payload = [mongo_payload]\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 360,
+        "wires": [
+            [
+                "e4fe5ff7eaaf64bd"
+            ]
+        ]
+    },
+    {
+        "id": "3d232585742146a1",
+        "type": "function",
+        "z": "da4a55b3415a9144",
+        "name": "shellyem3-C45BBE5FD50D_MongoDB",
+        "func": "let sensedAt = new Date();\n\nlet mongo_msg = {\n    metadata: {\n        sensorId: \"shellyem3-C45BBE5FD50D\"\n    },\n    timestamp: sensedAt\n};\n\nfor (let key in msg.payload) {\n    if (key.endsWith(\"total_returned\")) {\n        continue;\n    }\n\n    let datalist = key.split(\"/\");\n\n    let phaseNumber = datalist[3];\n    let measurement = datalist[4];\n\n    let phase;\n    switch (phaseNumber) {\n        case \"0\":\n            phase = \"A\";\n            break;\n        case \"1\":\n            phase = \"B\";\n            break;\n        case \"2\":\n            phase = \"C\";\n            break;\n        default:\n            phase = \"unknown\";\n    }\n\n    let new_key = measurement + phase;\n    mongo_msg[new_key] = msg.payload[key];\n}\n\nreturn { payload: [mongo_msg] };\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 860,
+        "wires": [
+            [
+                "d3c725b03492281a"
+            ]
+        ]
+    },
+    {
+        "id": "e2ad21cb2a4f7a6f",
         "type": "debug",
         "z": "da4a55b3415a9144",
-        "name": "debug 7",
+        "name": "debug 8",
         "active": false,
         "tosidebar": true,
         "console": false,
@@ -292,113 +760,107 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 560,
-        "y": 720,
+        "x": 660,
+        "y": 920,
         "wires": []
     },
     {
-        "id": "234bbcf61aebd0ae",
-        "type": "switch",
+        "id": "8d5618bd69806708",
+        "type": "mqtt in",
         "z": "da4a55b3415a9144",
-        "name": "switchSensorName",
-        "property": "payload",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "airQ1",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "airQ2",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "airQ3",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "airQ4",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "airQ5",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "EST_MET",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 6,
-        "x": 590,
-        "y": 520,
+        "name": "",
+        "topic": "LabRDD/sensores/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "938858c8b5c0abef",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 1080,
         "wires": [
             [
-                "7679f7b1417b301b"
-            ],
-            [
-                "6961722f50f24a3f"
-            ],
-            [
-                "c9fc3d4f9b04d682"
-            ],
-            [
-                "fb6b3b4c9b0ec57e"
-            ],
-            [
-                "f955e159b564f96c"
-            ],
-            [
-                "4efba6d1c1b2bf7a"
+                "ea533d199a556a6b",
+                "3c1f27bd912795e7"
             ]
         ]
     },
     {
-        "id": "bd16c8487e93038b",
+        "id": "ea533d199a556a6b",
         "type": "function",
         "z": "da4a55b3415a9144",
-        "name": "GetSensorID",
-        "func": "let sensor_id = msg.topic.split(\"/\")[3];\nreturn {payload : sensor_id};",
+        "name": "MongoDBLabIoT",
+        "func": "let sensor_id = msg.topic.split(\"/\")[3];\nlet sensedAt = new Date();\nlet mongo_payload = {\n    metadata: {sensorId : sensor_id},\n    timestamp: sensedAt\n};\nif (sensor_id === \"Accuenergy\") {\n    let datalist = msg.payload.device.readings;\n    const paramTypeMap = {\n        V1: \"voltageA\", V2: \"voltageB\", V3: \"voltageC\",\n        I1: \"currentA\", I2: \"currentB\", I3: \"currentC\",\n        P1: \"powerA\", P2: \"powerB\", P3: \"powerC\",\n        Q1: \"reactivepowerA\", Q2: \"reactivepowerB\", Q3: \"reactivepowerC\",\n        S1: \"apparentpowerA\", S2: \"apparentpowerB\", S3: \"apparentpowerC\",\n        PF1: \"pfA\", PF2: \"pfB\", PF3: \"pfC\"\n    };\n\n    for (let i of datalist) {\n        let param = i[\"param\"];\n        let value = parseFloat(i[\"value\"]);\n        if (paramTypeMap.hasOwnProperty(param)) {\n            mongo_payload[paramTypeMap[param]] = value;\n        }\n    }\n\n    msg.payload = [mongo_payload];\n    return msg;\n} else {\n    let datalist = msg.payload.data;\n    for (const index of datalist) {\n        mongo_payload = {...mongo_payload, ...index};\n    }\n    msg.payload = [mongo_payload]\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
-        "y": 520,
+        "x": 470,
+        "y": 1080,
         "wires": [
             [
-                "234bbcf61aebd0ae"
+                "c601b20479fee59e"
             ]
         ]
     },
     {
-        "id": "7679f7b1417b301b",
-        "type": "debug",
+        "id": "e4fe5ff7eaaf64bd",
+        "type": "switch",
         "z": "da4a55b3415a9144",
-        "name": "debug 8",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 820,
-        "y": 500,
-        "wires": []
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "s31_0[1-9]|s31_1[01]",
+                "vt": "str",
+                "case": false
+            },
+            {
+                "t": "regex",
+                "v": "s31_1[2-9]|s31_20",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 830,
+        "y": 440,
+        "wires": [
+            [
+                "d3c725b03492281a"
+            ],
+            [
+                "c0217ae677f1d85d"
+            ]
+        ]
     },
     {
-        "id": "6961722f50f24a3f",
+        "id": "c0217ae677f1d85d",
+        "type": "mongodb4",
+        "z": "da4a55b3415a9144",
+        "clientNode": "cc2e1a24e3be2203",
+        "mode": "collection",
+        "collection": "11C-LabSN",
+        "operation": "insertOne",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "insertOneLabSN",
+        "x": 1120,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3c1f27bd912795e7",
         "type": "debug",
         "z": "da4a55b3415a9144",
         "name": "debug 9",
@@ -406,15 +868,16 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 820,
-        "y": 540,
+        "x": 420,
+        "y": 1180,
         "wires": []
     },
     {
-        "id": "c9fc3d4f9b04d682",
+        "id": "c601b20479fee59e",
         "type": "debug",
         "z": "da4a55b3415a9144",
         "name": "debug 10",
@@ -425,103 +888,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 820,
-        "y": 580,
+        "x": 700,
+        "y": 1160,
         "wires": []
-    },
-    {
-        "id": "fb6b3b4c9b0ec57e",
-        "type": "debug",
-        "z": "da4a55b3415a9144",
-        "name": "debug 11",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 820,
-        "y": 620,
-        "wires": []
-    },
-    {
-        "id": "f955e159b564f96c",
-        "type": "debug",
-        "z": "da4a55b3415a9144",
-        "name": "debug 12",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 820,
-        "y": 660,
-        "wires": []
-    },
-    {
-        "id": "4efba6d1c1b2bf7a",
-        "type": "debug",
-        "z": "da4a55b3415a9144",
-        "name": "debug 13",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 820,
-        "y": 700,
-        "wires": []
-    },
-    {
-        "id": "938858c8b5c0abef",
-        "type": "mqtt-broker",
-        "name": "mqtt2",
-        "broker": "192.0.2.11",
-        "port": "1883",
-        "clientid": "BrickNodeRed",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": false,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthRetain": "false",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closeRetain": "false",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willRetain": "false",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "26da50faa612a23d",
-        "type": "influxdb",
-        "hostname": "http://192.0.2.10",
-        "port": "8096",
-        "protocol": "http",
-        "database": "m1",
-        "name": "influxdb",
-        "usetls": false,
-        "tls": "",
-        "influxdbVersion": "2.0",
-        "url": "http://192.0.2.10:8096",
-        "timeout": "10",
-        "rejectUnauthorized": false
     }
 ]

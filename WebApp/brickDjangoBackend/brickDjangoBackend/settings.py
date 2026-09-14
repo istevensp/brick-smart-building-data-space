@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,16 +21,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '***REMOVED***'
+# Set DJANGO_SECRET_KEY in production. The default below is the throwaway
+# key django-admin startproject generates, and Django itself marks it
+# insecure.
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "***REMOVED***",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    'host.docker.internal',
-]
+# Turn this off for anything reachable from outside: with DEBUG on, every
+# error page prints the stack trace and the settings.
+DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+# Comma-separated. In a container this has to name the host the client
+# asks for, or Django answers 400 DisallowedHost.
+ALLOWED_HOSTS = os.environ.get(
+    "DJANGO_ALLOWED_HOSTS",
+    "localhost,127.0.0.1,host.docker.internal",
+).split(",")
 
 
 

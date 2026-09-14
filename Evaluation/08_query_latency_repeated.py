@@ -2,7 +2,7 @@
 
 Script 02 reports one invocation. Repeating the scalability measurement showed
 that a single invocation can land on a cold start and be off by 40 %, so the
-figures quoted in the paper are produced here instead: the median across trials
+figures reported are produced here instead: the median across trials
 and the spread between them.
 
 This measurement runs against the deployed dataset, which cannot be reloaded

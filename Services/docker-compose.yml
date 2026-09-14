@@ -10,8 +10,8 @@ services:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ***REMOVED***
-      MONGO_INITDB_ROOT_PASSWORD: ***REMOVED***
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:?set it in Services/.env}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?set it in Services/.env}
     networks:
       - brickNetwork
     restart: unless-stopped
@@ -28,7 +28,8 @@ services:
     networks:
       - brickNetwork
     environment:
-      - name=value
+      - NODERED_ADMIN_USER=${NODERED_ADMIN_USER:?set it in Services/.env}
+      - NODERED_ADMIN_PASSWORD_HASH=${NODERED_ADMIN_PASSWORD_HASH:?set it in Services/.env}
     restart: unless-stopped
     tty: true
     stdin_open: true

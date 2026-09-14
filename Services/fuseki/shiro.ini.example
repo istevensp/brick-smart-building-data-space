@@ -1,3 +1,5 @@
+# Copy to shiro.ini and set a password before starting Fuseki.
+# shiro.ini itself is git-ignored so the credential never ships.
 [main]
 ssl.enabled = false
 
@@ -5,7 +7,7 @@ plainMatcher = org.apache.shiro.authc.credential.SimpleCredentialsMatcher
 iniRealm.credentialsMatcher = $plainMatcher
 
 [users]
-admin = ***REMOVED***
+admin = CHANGE_ME_BEFORE_EXPOSING
 
 [urls]
 /$/status = anon

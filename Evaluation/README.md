@@ -1,8 +1,7 @@
 # Evaluation
 
-Scripts that produce every figure reported in the Results section of the paper.
-They exist so that a reader can reproduce the numbers instead of taking them on
-trust.
+Scripts that measure the released model and the deployment. They exist so
+that a reader can reproduce the numbers instead of taking them on trust.
 
 ## What each script measures
 
@@ -19,20 +18,23 @@ trust.
 | `09_readings_in_graph_repeated.py` | `04` over 100 trials | Yes |
 | `10_crossvalidation.py` | Whether the location violations are an artefact of an incomplete import closure, by validating four configurations and comparing them | No |
 | `13_scenario_query.py` | The query the end-to-end scenario describes, restricted to one laboratory through the REC hierarchy | Yes |
-| `12_defects_by_family.py` | Link coverage and unit defects split by device family, over the released model and the pre-repair backup | No |
+| `12_defects_by_family.py` | Link coverage and unit defects split by device family, over the released model and the earlier snapshot that carries the broken unit IRIs | No |
 | `11_reasoner_cost_repeated.py` | `05` over 20 trials, reporting the distribution of the factor rather than one value | Yes |
 | `14_partof_violations.py` | Why the four part-of violations fail. They are internal to REC and have nothing to do with Brick | No |
-| `15_paper_figures.py` | The five figures the text stated that no other script produced: densest and sparsest zone, what the points measure, the administrative layer, the MongoDB collections, and the deprecated terms in the release | No |
+| `15_model_summary.py` | The figures the text states that no other script produces: densest and sparsest zone, what the points measure, what a point and a device cost in triples, the administrative layer, the MongoDB collections, the unit IRIs before and after the repair, and the deprecated terms in the release | No |
 
 `12` and `15` also read `Ontology/brickESPOLschema-before-unit-repair.ttl`,
-the model as it stood before the unit IRIs were fixed, so the before/after is
-reproducible.
+an earlier snapshot of the model and the one that carries the 46 unresolvable
+unit IRIs, which is what makes them reproducible. It differs from the released
+model in more than the units: the outdoor spaces hang from the floor rather
+than from the campus, and two literal datatypes differ. Use it for the unit
+comparison, which is what `12` and `15` do, not as a validation baseline.
 
 `01`, `06`, `10`, `12`, `14` and `15` read the published ontology files
 directly, so they run anywhere the repository is checked out.
 
 `07`, `08`, `09` and `11` supersede `02`, `03`, `04` and `05` for every timing
-figure in the paper: a single invocation of the same measurement is not reproducible, and the
+number reported here: a single invocation of the same measurement is not reproducible, and the
 ratio that was going to be printed came out as 6.4, 4.4, 6.1 and 7.4 depending
 on the run. The single-pass scripts are kept because they are quicker to read.
 
@@ -92,7 +94,7 @@ installed equipment rather than of how long the building has been monitored.
 **The total number of triples has two correct answers.** The deployment mounts
 the dataset as a `ja:InfModel` with an RDFS reasoner, so a count with inference
 differs from a count without it by about a third. Instance counts do not have
-this problem, which is why the paper reports those.
+this problem, which is why the repeated versions are the ones reported.
 
 ## Requirements
 

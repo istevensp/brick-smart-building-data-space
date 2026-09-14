@@ -6,21 +6,28 @@ timings. This one derives the remaining figures the Results section uses:
   - the densest and the sparsest zone, by points and by devices;
   - how the 214 measurement points split into energy, indoor environment and
     weather station;
+  - what one measurement point and one device cost in triples, which is not the
+    instance graph divided by its points: that ratio also carries the spatial
+    and administrative layers, which do not grow with the points;
   - the size of the administrative layer REC contributes beyond the spaces;
   - the number of MongoDB collections the deployment writes to;
-  - the number of terms the Brick release carries as owl:deprecated;
+  - the number of terms the Brick release carries as owl:deprecated, and
+    the REC class each spatial one names as its replacement;
+  - the two shapes the release carries for brick:hasLocation, which do not
+    agree: the one on brick:Equipment accepts a rec:Space and the one on
+    brick:Entity does not, and Equipment is an Entity;
   - the unit IRIs in use before and after the repair, by identifier.
 
 It reads the published ontology files and needs no running deployment.
 
 Usage:
-    python Evaluation/15_paper_figures.py
+    python Evaluation/15_model_summary.py
 """
 
 import os
 from collections import Counter, defaultdict
 
-from rdflib import Graph, Namespace, OWL, RDF
+from rdflib import Graph, Namespace, OWL, RDF, RDFS, SH
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ONTOLOGY = os.path.join(ROOT, "Ontology")
@@ -90,6 +97,48 @@ def main():
     for name in sorted(counts, key=lambda k: (-counts[k], k)):
         print("  %-28s %3d" % (name, counts[name]))
     print("  %-28s %3d" % ("TOTAL", sum(counts.values())))
+    print()
+
+    # ---- what a point and a device cost in triples ----
+    print("MARGINAL COST OF A POINT AND OF A DEVICE")
+    print("-" * 58)
+    points = set(g.subjects(BRICK.isPointOf, None))
+    equipment = set(g.subjects(RDF.type, BRICK.Equipment))
+    instance = set(s for s in g.subjects() if str(s).startswith(str(ESPOL)))
+
+    # a point pays for its own description and for the hasPoint that names it
+    # on the device, which is the same link stated in the other direction
+    own_points = sum(1 for s in points for _ in g.predicate_objects(s))
+    has_point = sum(1 for _ in g.subject_objects(BRICK.hasPoint))
+    own_equipment = (sum(1 for s in equipment for _ in g.predicate_objects(s))
+                     - has_point)
+    rest = sum(1 for s in (instance - points - equipment)
+               for _ in g.predicate_objects(s))
+
+    print("  a point: %d of its own + %d hasPoint = %d, or %.2f per point"
+          % (own_points, has_point, own_points + has_point,
+             (own_points + has_point) / len(points)))
+    spread = Counter(len(list(g.predicate_objects(s))) + 1 for s in points)
+    for size in sorted(spread):
+        print("     %d triples : %3d points" % (size, spread[size]))
+    print("  a device: %d over %d devices, or %.2f each, the hasPoint aside"
+          % (own_equipment, len(equipment), own_equipment / len(equipment)))
+    carried = Counter(o for _, o in g.subject_objects(BRICK.isPointOf))
+    print("     and it carries between %d and %d points"
+          % (min(carried.values()), max(carried.values())))
+    predicates = Counter(local(p) for s in equipment for p in g.predicates(s)
+                         if p != BRICK.hasPoint)
+    print("     %s" % ", ".join(
+        "%s %d" % (name, predicates[name])
+        for name in sorted(predicates, key=lambda k: (-predicates[k], k))))
+    print("  the spatial and administrative layers: %d triples, and they do"
+          % rest)
+    print("     not grow with the points")
+    print("  %d + %d + %d = %d instance triples, %.2f per point: the density"
+          % (own_points + has_point, own_equipment, rest,
+             own_points + has_point + own_equipment + rest,
+             (own_points + has_point + own_equipment + rest) / len(points)))
+    print("     of the whole model, which is not what a new point costs")
     print()
 
     # ---- the administrative layer REC contributes ----
@@ -164,9 +213,46 @@ def main():
                "Location")
     print("  of which the spatial classes this model replaces:")
     for name in spatial:
-        print("     %-16s %s" % ("brick:" + name,
-                                 "deprecated" if BRICK[name] in deprecated
-                                 else "NOT deprecated"))
+        replacement = brick.value(BRICK[name], BRICK.isReplacedBy)
+        print("     %-16s %-14s %s"
+              % ("brick:" + name,
+                 "deprecated" if BRICK[name] in deprecated else "NOT deprecated",
+                 "-> %s" % replacement if replacement else ""))
+    print()
+
+    # ---- the two shapes the release carries for brick:hasLocation ----
+    print("SHAPES ON brick:hasLocation IN THE SAME DISTRIBUTION")
+    print("-" * 58)
+
+    def shacl_list(node):
+        items = []
+        while node is not None and node != RDF.nil:
+            items.append(brick.value(node, RDF.first))
+            node = brick.value(node, RDF.rest)
+        return items
+
+    for shape in sorted(brick.subjects(SH.path, BRICK.hasLocation), key=str):
+        holders = sorted(local(h) for h in brick.subjects(SH.property, shape))
+        klass = brick.value(shape, SH["class"])
+        alternatives = shacl_list(brick.value(shape, SH["or"]))
+        count = brick.value(shape, SH.maxCount)
+        if klass is not None:
+            rule = "sh:class %s" % klass
+        elif alternatives:
+            rule = "sh:or " + " | ".join(
+                "sh:class %s" % brick.value(a, SH["class"]) for a in alternatives)
+        else:
+            rule = "sh:maxCount %s" % count
+        print("  attached to %-12s %s" % (", ".join(holders) or "(none)", rule))
+
+    # both reach the same nodes: Equipment is an Entity
+    chain, current = [], BRICK.Equipment
+    while current is not None:
+        chain.append(local(current))
+        current = brick.value(current, RDFS.subClassOf)
+    print("  %s" % " -> ".join(chain))
+    print("  so a device located at a rec:Space satisfies the Equipment shape")
+    print("  and violates the Entity one")
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 """Measure SPARQL query latency against the deployed Fuseki endpoint.
 
-Q1 and Q2 are the two queries printed in the paper. Q3 is the use case the
-paper describes in prose: find the temperature sensors and obtain the handle
-with which their readings are fetched from MongoDB.
+Q1 and Q2 are the two queries the README shows. Q3 is the use case: find
+the temperature sensors and obtain the handle with which their readings
+are fetched from MongoDB.
 
 Reported times include the HTTP round trip to localhost, which is what a client
 of the Django backend actually pays.

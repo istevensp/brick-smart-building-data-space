@@ -61,11 +61,16 @@ def espol_namespace(graph):
 
 
 def with_deprecated_types(base, shapes):
-    """Add, for every REC-typed entity, the Brick class it replaced.
+    """Add, for every typed entity, every Brick class the release says it replaced.
 
     Brick 1.4.4 states the mapping as `brick:X brick:isReplacedBy rec:Y`, so the
-    variant is obtained by reading that backwards. This reconstructs the patch
-    that was applied and then reverted during development.
+    variant is obtained by reading that backwards. The mapping is many-to-one, so
+    reading it backwards is deliberately blunt: a rec:Zone also becomes a
+    brick:Bench_Space and a brick:Lighting_Zone, and a brick:Temperature_Sensor
+    also becomes a brick:Heat_Sensor. It is a probe for whether a Brick location
+    type on the spaces clears the brick:hasLocation violations, not a model
+    anyone should build: the dual typing makes the outdoor spaces Brick Locations
+    while the campus is not one, which adds two violations of its own.
     """
     replaced_by = {}
     for brick_class, rec_class in shapes.subject_objects(BRICK.isReplacedBy):

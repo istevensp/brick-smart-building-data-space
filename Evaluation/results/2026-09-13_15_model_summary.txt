@@ -27,6 +27,19 @@ WHAT THE POINTS MEASURE
   weather station                6
   TOTAL                        214
 
+MARGINAL COST OF A POINT AND OF A DEVICE
+----------------------------------------------------------
+  a point: 825 of its own + 214 hasPoint = 1039, or 4.86 per point
+     4 triples :  31 points
+     5 triples : 183 points
+  a device: 111 over 37 devices, or 3.00 each, the hasPoint aside
+     and it carries between 2 and 18 points
+     db_id 37, hasLocation 37, type 37
+  the spatial and administrative layers: 107 triples, and they do
+     not grow with the points
+  1039 + 111 + 107 = 1257 instance triples, 5.87 per point: the density
+     of the whole model, which is not what a new point costs
+
 ADMINISTRATIVE LAYER (what REC adds beyond spaces)
 ----------------------------------------------------------
   FIEC                     owns                   11C
@@ -90,10 +103,19 @@ DEPRECATED TERMS IN THE BRICK DISTRIBUTION
 ----------------------------------------------------------
   terms carrying owl:deprecated : 246
   of which the spatial classes this model replaces:
-     brick:Site       deprecated
-     brick:Building   deprecated
-     brick:Floor      deprecated
-     brick:Room       deprecated
-     brick:Zone       deprecated
-     brick:Outdoor_Area deprecated
-     brick:Location   deprecated
+     brick:Site       deprecated     -> https://w3id.org/rec#Site
+     brick:Building   deprecated     -> https://w3id.org/rec#Building
+     brick:Floor      deprecated     -> https://w3id.org/rec#Level
+     brick:Room       deprecated     -> https://w3id.org/rec#Room
+     brick:Zone       deprecated     -> https://w3id.org/rec#Zone
+     brick:Outdoor_Area deprecated     -> https://w3id.org/rec#OutdoorSpace
+     brick:Location   deprecated     -> https://w3id.org/rec#Architecture
+
+SHAPES ON brick:hasLocation IN THE SAME DISTRIBUTION
+----------------------------------------------------------
+  attached to Entity       sh:class https://brickschema.org/schema/Brick#Location
+  attached to Point        sh:maxCount 0
+  attached to Equipment    sh:or sh:class https://brickschema.org/schema/Brick#Location | sh:class https://w3id.org/rec#Space
+  Equipment -> Class -> Entity
+  so a device located at a rec:Space satisfies the Equipment shape
+  and violates the Entity one

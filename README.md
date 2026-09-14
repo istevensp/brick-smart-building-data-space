@@ -324,3 +324,4 @@ repository. Third-party libraries and the Brick, RealEstateCore and QUDT
 vocabularies remain under their own licenses.
 
 See [LICENSE](LICENSE) for the full text.
+
